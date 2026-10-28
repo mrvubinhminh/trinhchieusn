@@ -110,7 +110,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .t-bday.in .name-in{animation:hue 9s linear 2s infinite}
 .rule{height:4px;width:0;border-radius:4px;background:linear-gradient(90deg,transparent,var(--c2),#fff,var(--c2),transparent);box-shadow:0 0 18px var(--glow)}
 .show.in .rule{animation:grow .9s var(--ease) 1.6s forwards}
-.sub{max-width:min(1100px,90vw);font-size:clamp(16px,min(3vw,4.4vh),44px);font-weight:600;color:#fff;opacity:0;transform:translateY(12px);
+.sub{white-space:pre-line;max-width:min(1100px,90vw);font-size:clamp(16px,min(3vw,4.4vh),44px);font-weight:600;color:#fff;opacity:0;transform:translateY(12px);
   text-shadow:0 2px 12px rgba(0,0,0,.6);text-wrap:balance}
 .t-bday .sub{font-family:var(--script);font-weight:700;font-size:clamp(20px,min(3.8vw,5.6vh),56px)}
 .show.in .sub{animation:fadeUp .8s var(--ease) 1.9s forwards}
@@ -180,6 +180,22 @@ button,input,select,textarea{font:inherit;color:inherit}
 .sec:first-child{border-top:0}
 .sec h2{margin:0 0 var(--s3);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .types{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s2)}
+.wish{gap:10px}
+#wishRand[hidden],#wishOwn[hidden]{display:none}
+.wstyles{display:flex;flex-wrap:wrap;gap:6px}
+.wstyles .fchip span{min-height:36px;padding:0 12px;font-size:13px}
+.wish-in{display:flex;gap:8px;align-items:stretch}
+.wish-in textarea{flex:1;min-height:64px;resize:vertical}
+.wish-in .btn{min-width:48px;font-size:20px}
+.wlib summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--muted);min-height:36px;display:flex;align-items:center;gap:6px;list-style:none}
+.wlib summary::-webkit-details-marker{display:none}
+.wlib summary::before{content:"▸";transition:transform .2s}
+.wlib[open] summary::before{transform:rotate(90deg)}
+.wlist{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow:auto;padding:4px 2px 2px}
+.witem{display:flex;gap:10px;align-items:flex-start;width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);text-align:left;cursor:pointer;font:inherit;font-size:14px;line-height:1.5;white-space:pre-line;transition:border-color .15s,background .15s}
+.witem:hover{border-color:var(--primary);background:var(--surface-2)}
+.witem.on{border-color:var(--primary);box-shadow:0 0 0 2px rgba(255,122,61,.25)}
+.witem b{flex:none;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--surface-3);color:var(--muted);white-space:nowrap}
 .for-row{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:12px;border-radius:var(--radius-sm);border:1px dashed rgba(255,122,61,.45);background:rgba(255,122,61,.05)}
 .for-row[hidden]{display:none}
 .fors{display:flex;flex-wrap:wrap;gap:6px}
@@ -387,6 +403,7 @@ body.tv-mode .hud{display:none!important}
     <button type="button" data-act="conf" title="Bắn pháo giấy (C)">🎊 <span>Pháo giấy</span></button>
     <button type="button" data-act="replay" title="Chiếu lại chữ (R)">🔁 <span>Chiếu lại</span></button>
     <button type="button" data-act="photo" id="hudPhoto" title="Ảnh nền tiếp theo (N)" hidden>🖼️ <span>Ảnh sau</span></button>
+    <button type="button" data-act="song" id="hudSong" title="Đổi bài nhạc khác (S)">🔀 <span>Đổi bài</span></button>
     <button type="button" data-act="mute" id="hudMute" aria-pressed="false" aria-label="Tắt tiếng (M)">🔊</button>
     <button type="button" data-act="fs" aria-label="Toàn màn hình (F)">⛶</button>
   </div>
@@ -416,6 +433,7 @@ body.tv-mode .hud{display:none!important}
         <button type="button" class="btn" data-cmd="conf">🎊 Pháo giấy</button>
         <button type="button" class="btn" data-cmd="replay">🔁 Chiếu lại</button>
         <button type="button" class="btn" data-cmd="photo">🖼️ Ảnh sau</button>
+        <button type="button" class="btn" data-cmd="song">🔀 Đổi bài</button>
         <button type="button" class="btn" data-cmd="mute" id="remoteMute">🔊 Tắt tiếng</button>
         <button type="button" class="btn stop" data-cmd="stop">⏹ Dừng</button>
       </div>
@@ -451,10 +469,24 @@ body.tv-mode .hud{display:none!important}
             <input type="file" id="fAva" accept="image/*" multiple hidden>
             <p class="hint" id="avaHint">Nhiều tên thì ảnh thứ nhất cho tên thứ nhất, ảnh thứ hai cho tên thứ hai… Ảnh được thu nhỏ và lưu trong máy này.</p>
           </div>
-          <div class="field">
-            <label for="fSub" id="subLbl">Lời chúc</label>
-            <input type="text" id="fSub" maxlength="100" autocomplete="off">
-            <p class="hint">Để trống thì dùng lời mặc định.</p>
+          <div class="field wish">
+            <span class="lbl" id="subLbl">Lời chúc</span>
+            <div class="seg" role="radiogroup" aria-label="Cách chọn lời chúc">
+              <label><input type="radio" name="wishMode" value="rand"><span>🔀 Ngẫu nhiên</span></label>
+              <label><input type="radio" name="wishMode" value="own"><span>✍️ Tự gõ, chọn câu</span></label>
+            </div>
+            <div id="wishRand">
+              <div class="wstyles" id="wishStyles" role="group" aria-label="Văn phong lời chúc"></div>
+              <p class="hint">Mỗi lần chiếu, mỗi người nhận một lời chúc khác nhau trong 20 câu mẫu. Bỏ chọn văn phong nào thì không lấy văn phong đó.</p>
+            </div>
+            <div id="wishOwn">
+              <div class="wish-in"><textarea id="fSub" maxlength="220" rows="2" placeholder="Gõ lời chúc, hoặc bấm một câu mẫu bên dưới để chép vào rồi sửa"></textarea><button type="button" class="btn sm" id="wishDice" title="Lấy một câu mẫu ngẫu nhiên">🎲</button></div>
+              <p class="hint">Để trống thì dùng lời mặc định của dịp đã chọn.</p>
+            </div>
+            <details class="wlib" id="wishLib">
+              <summary>📋 Xem 20 lời chúc mẫu <span id="wishCount"></span></summary>
+              <div class="wlist" id="wishList"></div>
+            </details>
           </div>
           <div class="row2">
             <div class="field" id="rowAge">
@@ -511,10 +543,15 @@ body.tv-mode .hud{display:none!important}
           <div class="field">
             <label for="fMusic">Nhạc</label>
             <select id="fMusic">
-              <option value="builtin">Giai điệu có sẵn (không cần mạng)</option>
-              <option value="net">Bài hát của thầy (cần mạng, phát ngẫu nhiên)</option>
+              <option value="net">🔀 Nhạc ngẫu nhiên: 5 bài sinh nhật, 6 bài vinh danh (cần mạng)</option>
+              <option value="builtin">🎹 Giai điệu có sẵn (không cần mạng)</option>
               <option value="off">Không phát nhạc</option>
             </select>
+          </div>
+          <div class="field" id="rowSong">
+            <label for="fSong" id="songLbl">Bài nhạc sinh nhật</label>
+            <select id="fSong"></select>
+            <p class="hint">Ngẫu nhiên: mỗi lần chiếu một bài khác, hết bài tự chuyển bài mới. Khi chiếu bấm 🔀 hoặc phím S để đổi bài.</p>
           </div>
           <div class="field">
             <span class="lbl" id="volLbl">Âm lượng</span>
@@ -677,6 +714,321 @@ const TYPES = {
     pal: GOLD.concat(['#ff4d6d', '#b388ff']), emo: ['🏅', '⭐', '🎖️', '✨'], shapes: ['burst', 'star', 'willow', 'ring', 'double'] }
 };
 
+/* Lời chúc mẫu: 20 câu cho mỗi loại, nhiều văn phong. Mã đầu câu là văn phong:
+   tc tình cảm · hh vui nhộn · tt trang trọng · th thơ, ca dao · ng ngắn gọn · cc truyền cảm hứng · toan chất Toán học */
+const WSTYLE = { tc: '💗 Tình cảm', hh: '😄 Vui nhộn', tt: '🎩 Trang trọng', th: '🌸 Thơ, ca dao', ng: '⚡ Ngắn gọn', cc: '🚀 Truyền cảm hứng', toan: '📐 Chất Toán học' };
+const WISH = {
+  birthday: [
+    'tc|Chúc em tuổi mới thật nhiều niềm vui, sức khỏe và luôn giữ nụ cười rạng rỡ như hôm nay!',
+    'tc|Thầy cô và cả lớp chúc em một tuổi mới bình an, được yêu thương và học hành tấn tới.',
+    'hh|Thêm một tuổi, thêm một cây nến, thêm điểm 10 và… bớt một lần quên làm bài tập nhé!',
+    'hh|Chúc em tuổi mới ăn hoài không béo, học đâu nhớ đó, kiểm tra toàn trúng tủ!',
+    'cc|Tuổi mới là một trang giấy trắng, hãy viết lên đó những ước mơ thật đẹp em nhé!',
+    'cc|Chúc em luôn tự tin, dám ước mơ và đủ kiên trì để biến ước mơ thành hiện thực.',
+    'th|Tuổi mới thêm một mùa hoa\nChúc em học giỏi, cả nhà vui tươi.',
+    'th|Bánh thơm nến sáng lung linh\nChúc em tuổi mới xinh xinh nụ cười.',
+    'toan|Chúc em tuổi mới: niềm vui tăng như hàm mũ, nỗi buồn tiến dần về 0!',
+    'toan|Chúc cuộc sống của em luôn đồng biến với hạnh phúc và nghịch biến với lo âu!',
+    'toan|Tuổi mới chúc em giải được mọi bài toán khó, kể cả những bài toán của cuộc đời!',
+    'ng|Sinh nhật vui vẻ, tuổi mới thật tuyệt vời nhé em!',
+    'ng|Chúc mừng tuổi mới, chúc em luôn hạnh phúc!',
+    'tt|Thay mặt tập thể lớp, chúc em tuổi mới mạnh khỏe, chăm ngoan và đạt nhiều thành tích tốt.',
+    'tc|Cả lớp mình rất vui vì có em. Chúc em một sinh nhật thật đáng nhớ!',
+    'hh|Chúc em tuổi mới: điểm cao như núi, bài tập nhẹ như bông, giờ ra chơi dài như… mong ước!',
+    'cc|Mỗi tuổi mới là một bậc thang. Chúc em bước thật vững và lên thật cao!',
+    'tc|Mong em luôn được bao bọc bởi yêu thương của gia đình, thầy cô và bạn bè.',
+    'toan|Chúc em niềm vui là tích phân từ 0 đến vô cùng, còn nỗi buồn là một tập rỗng!',
+    'th|Chúc em vững bước đến trường\nHọc hay, ngoan giỏi, muôn phương rạng ngời.'
+  ],
+  bd_wife: [
+    'tc|Cảm ơn em luôn ở bên anh. Chúc em tuổi mới thật xinh đẹp, hạnh phúc và mãi là nụ cười của gia đình mình!',
+    'tc|Gặp em là điều may mắn nhất đời anh. Sinh nhật vui vẻ, người phụ nữ anh thương!',
+    'tc|Chúc vợ yêu tuổi mới luôn khỏe, luôn vui và luôn được anh chiều chuộng hết mực!',
+    'hh|Chúc vợ tuổi mới: da đẹp, dáng xinh, ví luôn đầy, còn chồng thì… luôn ngoan!',
+    'hh|Quà sinh nhật năm nay: anh nhận rửa bát cả tuần. Mong em nhận quà và… bỏ qua mọi lỗi lầm!',
+    'hh|Vợ thêm một tuổi mà nhan sắc vẫn đôi mươi. Chuyện này khoa học chưa giải thích được!',
+    'th|Bao năm bên nhau sớm chiều\nAnh thương em mãi như điều đầu tiên.',
+    'th|Em là nắng ấm ban mai\nLà hoa trong nắng, là ai trong lòng.',
+    'tt|Chúc người bạn đời yêu quý một tuổi mới an yên, hạnh phúc và viên mãn.',
+    'ng|Sinh nhật vui vẻ, vợ yêu! Anh yêu em nhiều lắm!',
+    'ng|Chúc mừng sinh nhật em, cả thế giới của anh!',
+    'cc|Chúc em tuổi mới luôn tự tin tỏa sáng và theo đuổi mọi điều em mơ ước. Anh luôn ở phía sau em!',
+    'tc|Cảm ơn em đã vun vén tổ ấm này. Hôm nay hãy để anh và các con chăm sóc em nhé!',
+    'tc|Mỗi ngày bên em đều là một món quà. Hôm nay anh chỉ muốn nói: anh yêu em!',
+    'hh|Chúc vợ tuổi mới ít giận, nhiều cười, mua sắm thả ga… miễn là đúng ngày lương!',
+    'tc|Chúc em luôn rạng rỡ như ngày đầu ta gặp, và hạnh phúc hơn qua mỗi năm.',
+    'th|Tuổi mới chúc em vẹn tròn\nNụ cười luôn thắm, vẫn còn xuân xanh.',
+    'cc|Chúc người phụ nữ mạnh mẽ nhất anh biết luôn khỏe mạnh để cùng anh đi thật xa.',
+    'tt|Chúc em một tuổi mới dồi dào sức khỏe, công việc thuận lợi, gia đình mình luôn ấm êm.',
+    'tc|Dù năm tháng có trôi, anh vẫn muốn cùng em đón thật nhiều sinh nhật nữa!'
+  ],
+  bd_parent: [
+    'tc|Con kính chúc tuổi mới thật nhiều sức khỏe, bình an, luôn vui vầy bên con cháu. Cảm ơn vì tất cả yêu thương!',
+    'tt|Nhân ngày sinh nhật, con kính chúc phúc như Đông Hải, thọ tỷ Nam Sơn.',
+    'tt|Con kính chúc tuổi mới an khang, mạnh khỏe, vạn sự như ý.',
+    'tc|Cả đời vất vả vì con, hôm nay con chỉ muốn nói: con thương và biết ơn nhiều lắm!',
+    'tc|Con chúc luôn khỏe mạnh để chúng con còn được báo hiếu thật lâu.',
+    'th|Công cha như núi Thái Sơn\nNghĩa mẹ như nước trong nguồn chảy ra.',
+    'th|Tóc sương điểm bạc thời gian\nCon xin chúc mãi bình an, vui cười.',
+    'th|Sinh nhật thêm tuổi thêm vui\nCháu con sum họp, ngọt bùi bên nhau.',
+    'hh|Chúc tuổi mới ăn ngon, ngủ kỹ, đi bộ khỏe, và… bớt lo cho con một chút nhé!',
+    'hh|Chúc tuổi mới vẫn trẻ trung, nhắn tin nhanh như con, lướt mạng giỏi hơn cháu!',
+    'ng|Con chúc mừng sinh nhật! Con thương nhiều lắm!',
+    'ng|Mừng sinh nhật, chúc luôn mạnh khỏe và vui vẻ!',
+    'tc|Cảm ơn vì đã cho con một mái nhà ấm áp. Chúc tuổi mới ngập tràn niềm vui!',
+    'tc|Mỗi nếp nhăn là một lần hi sinh vì con. Con mong được đền đáp thật nhiều.',
+    'cc|Chúc luôn giữ tinh thần lạc quan, sống vui mỗi ngày, vì niềm vui là liều thuốc bổ nhất.',
+    'tt|Thay mặt các con cháu, kính chúc tuổi mới dồi dào sức khỏe, an vui và trường thọ.',
+    'tc|Dù con có lớn đến đâu, con vẫn mãi là đứa trẻ cần vòng tay yêu thương ấy. Chúc mừng sinh nhật!',
+    'hh|Hôm nay con xin nghỉ cãi lời một ngày, ngoan tuyệt đối để làm quà sinh nhật!',
+    'cc|Chúc tuổi mới có thật nhiều niềm vui mới: đi chơi xa, học điều hay, gặp lại bạn cũ.',
+    'tc|Con chúc luôn được bình an, mỗi sáng thức dậy đều thấy lòng nhẹ nhàng.'
+  ],
+  bd_friend: [
+    'tc|Chúc bạn tuổi mới cháy hết mình, đi thật nhiều nơi, cười thật nhiều và luôn có tụi mình bên cạnh!',
+    'hh|Chúc mừng bạn đã chính thức già thêm một tuổi! Đừng lo, tụi mình già theo mà!',
+    'hh|Tuổi mới chúc bạn tiền vào như nước, còn mỡ bụng thì ra như… nước luôn!',
+    'hh|Chúc bạn tuổi mới có người yêu, nếu có rồi thì có thêm… tiền để bao tụi mình!',
+    'hh|Sinh nhật vui vẻ! Quà thì chưa có, nhưng tình bạn thì tặng cả đời!',
+    'tc|Cảm ơn bạn vì đã là người bạn tuyệt nhất. Chúc tuổi mới thật rực rỡ!',
+    'tc|Có bạn, những ngày bình thường cũng thành đáng nhớ. Happy birthday!',
+    'cc|Chúc bạn tuổi mới đủ dũng cảm để theo đuổi mọi giấc mơ, và đủ may mắn để chạm tới chúng!',
+    'cc|Tuổi mới, hãy sống thật hết mình: sai cũng được, miễn là không hối tiếc!',
+    'ng|Happy birthday bạn thân! Quẩy lên nào!',
+    'ng|Chúc mừng sinh nhật! Mãi là bạn tốt nhé!',
+    'th|Bạn bè ta mãi có nhau\nTuổi mới thêm sắc thêm màu niềm vui.',
+    'th|Ngày vui nến sáng lung linh\nChúc bạn tuổi mới thật xinh, thật giàu.',
+    'tc|Mong bạn luôn khỏe mạnh, bình an, và mỗi ngày đều có lý do để cười.',
+    'hh|Chúc bạn tuổi mới ăn không lo béo, ngủ không lo trễ, sếp không bao giờ gọi điện!',
+    'tt|Chúc bạn một tuổi mới thành công, hạnh phúc và gặt hái thật nhiều thành quả.',
+    'tc|Bao nhiêu năm rồi vẫn là tụi mình. Chúc bạn sinh nhật thật vui, mình luôn ở đây!',
+    'cc|Chúc bạn năm nay học thêm điều mới, đi thêm nơi mới, quen thêm nhiều người hay.',
+    'hh|Sinh nhật bạn mà tụi mình còn háo hức hơn. Lý do? Bánh kem!',
+    'tc|Chúc cậu luôn là chính mình, rực rỡ theo cách riêng của cậu!'
+  ],
+  bd_colleague: [
+    'tt|Chúc tuổi mới nhiều sức khỏe, công tác thuận lợi, gia đình hạnh phúc. Cảm ơn vì luôn đồng hành cùng tập thể!',
+    'tt|Thay mặt tập thể, xin chúc mừng sinh nhật và kính chúc một tuổi mới an khang, thành công.',
+    'tt|Kính chúc tuổi mới vạn sự như ý, sự nghiệp thăng tiến, gia đình an vui.',
+    'tc|Làm việc cùng nhau là niềm vui của cả nhóm. Chúc mừng sinh nhật, người đồng nghiệp tuyệt vời!',
+    'tc|Cảm ơn vì những giờ phút sẻ chia trong công việc. Chúc tuổi mới thật nhiều niềm vui!',
+    'hh|Chúc tuổi mới lương tăng đều, việc giảm dần, họp ngắn lại và cà phê luôn đầy!',
+    'hh|Chúc mừng sinh nhật! Hôm nay được miễn họp, miễn báo cáo… trong mơ thôi nhé!',
+    'hh|Chúc tuổi mới email ít, hạn chót xa, sếp vui, lương về sớm!',
+    'cc|Chúc một năm mới bùng nổ ý tưởng và gặt hái nhiều thành công mới.',
+    'cc|Mong tuổi mới mang đến những cơ hội mới và những dấu ấn đáng tự hào.',
+    'ng|Chúc mừng sinh nhật! Chúc mọi điều tốt đẹp nhất!',
+    'ng|Sinh nhật vui vẻ, công việc hanh thông!',
+    'th|Tuổi mới vạn sự hanh thông\nGia đình êm ấm, việc công thuận buồm.',
+    'th|Đồng nghiệp thêm một tuổi xuân\nNiềm vui gấp bội, ân cần sẻ chia.',
+    'tc|Cả phòng chúc mừng sinh nhật! Mong mãi được làm việc cùng nhau thật lâu.',
+    'tt|Kính chúc dồi dào sức khỏe để tiếp tục cống hiến và gặt hái nhiều thành công.',
+    'tc|Một đồng nghiệp tận tâm và chân thành như vậy thật đáng quý. Chúc tuổi mới an vui!',
+    'hh|Thêm một tuổi, thêm một năm kinh nghiệm… và thêm một lý do để cả phòng được ăn bánh!',
+    'cc|Chúc tuổi mới luôn giữ ngọn lửa nhiệt huyết và lan tỏa năng lượng tích cực.',
+    'tc|Chúc mừng sinh nhật! Cảm ơn vì luôn sẵn lòng giúp đỡ mọi người.'
+  ],
+  bd_kid: [
+    'tc|Chúc con tuổi mới luôn khỏe mạnh, ngoan ngoãn, học giỏi và có thật nhiều niềm vui. Bố mẹ yêu con!',
+    'tc|Con là món quà quý giá nhất của bố mẹ. Sinh nhật vui vẻ nhé con yêu!',
+    'tc|Chúc con lớn lên thật khỏe, thật vui và luôn được yêu thương.',
+    'hh|Chúc bé tuổi mới ăn ngoan chóng lớn, ngủ ngon không mè nheo, và bớt… nghịch một tí xíu!',
+    'hh|Thêm một tuổi, con cao thêm một chút, còn bố mẹ thì… thêm vài sợi tóc bạc!',
+    'hh|Chúc con tuổi mới ăn hết rau, đánh răng đủ hai lần và được thật nhiều quà!',
+    'th|Con là nắng ấm trong nhà\nLà niềm vui nhỏ, là quà trời cho.',
+    'th|Bé ơi tuổi mới thêm xinh\nNgoan hiền chăm học, gia đình vui tươi.',
+    'th|Mừng con thêm một tuổi tròn\nMẹ cha mong mãi con còn ngây thơ.',
+    'cc|Chúc con luôn tò mò khám phá, dám thử điều mới và không bao giờ sợ sai.',
+    'cc|Ước mơ của con lớn đến đâu, bố mẹ cũng sẽ cùng con chạm tới!',
+    'ng|Sinh nhật vui vẻ, con yêu!',
+    'ng|Chúc mừng sinh nhật bé yêu! Bố mẹ thương con nhất!',
+    'tc|Mỗi ngày nhìn con lớn lên là hạnh phúc lớn nhất của bố mẹ.',
+    'hh|Hôm nay con là siêu nhân sinh nhật, có quyền ăn hai miếng bánh kem!',
+    'tc|Chúc con luôn hồn nhiên, vui tươi như những ngày thơ bé.',
+    'cc|Chúc con tuổi mới học thêm thật nhiều điều hay và kết thêm nhiều bạn tốt.',
+    'tt|Chúc con tuổi mới mạnh khỏe, chăm ngoan, biết yêu thương mọi người.',
+    'tc|Ông bà, bố mẹ và cả nhà chúc con một sinh nhật thật vui!',
+    'hh|Chúc con tuổi mới điểm 10 thật nhiều, đồ chơi thật nhiều, còn bài tập thì… vừa đủ thôi!'
+  ],
+  victory: [
+    'tc|Chúc mừng em đã chiến thắng! Thầy cô và cả lớp rất tự hào về em!',
+    'cc|Chiến thắng hôm nay là phần thưởng cho những nỗ lực không ngừng. Hãy tiếp tục tỏa sáng!',
+    'cc|Đỉnh cao này mới chỉ là khởi đầu. Hãy tiếp tục chinh phục những mục tiêu lớn hơn!',
+    'tt|Xin trân trọng chúc mừng quán quân cuộc thi. Thành tích xuất sắc, xứng đáng vinh danh!',
+    'tt|Chúc mừng thành tích xuất sắc! Em đã làm rạng danh tập thể lớp.',
+    'hh|Vô địch rồi! Từ nay cả lớp xin gọi em là "cao thủ"!',
+    'hh|Thắng thuyết phục đến mức đối thủ cũng muốn xin chữ ký!',
+    'toan|Chiến thắng này chứng minh: nỗ lực + kiên trì = kết quả xứng đáng!',
+    'toan|Điểm số của em đã tiến đến giới hạn hoàn hảo. Chúc mừng nhà vô địch!',
+    'th|Mồ hôi đổi lấy vinh quang\nHôm nay em đứng rỡ ràng đỉnh cao.',
+    'th|Vinh quang tỏa sáng hôm nay\nCông em khổ luyện tháng ngày đáng ghi.',
+    'ng|Xuất sắc! Chúc mừng nhà vô địch!',
+    'ng|Quán quân là em! Tuyệt vời!',
+    'tc|Cả lớp đã cùng hồi hộp và cùng vỡ òa vì em. Chúc mừng chiến thắng!',
+    'cc|Em đã cho mọi người thấy: không có gì là không thể!',
+    'tc|Thầy cô biết em đã cố gắng thế nào. Chiến thắng này hoàn toàn xứng đáng!',
+    'hh|Chiếc cúp thì nặng, nhưng chắc không nặng bằng số bài em đã luyện!',
+    'cc|Hãy giữ ngọn lửa đam mê này, những chiến thắng tiếp theo đang chờ em!',
+    'tt|Ghi nhận thành tích xuất sắc của em trong cuộc thi. Chúc em tiếp tục gặt hái thành công.',
+    'toan|Từ con số 0 đến vị trí số 1, em đã vẽ nên đồ thị đẹp nhất của sự cố gắng!'
+  ],
+  team: [
+    'tc|Đồng lòng làm nên chiến thắng! Chúc mừng cả đội!',
+    'cc|Một mình có thể đi nhanh, cùng nhau mới đi được xa. Chúc mừng đội vô địch!',
+    'cc|Sức mạnh của đội là từng thành viên, và sức mạnh của từng thành viên là cả đội!',
+    'tt|Xin trân trọng chúc mừng đội vô địch với màn thể hiện xuất sắc!',
+    'hh|Đội mình mạnh quá, các đội khác xin… nghỉ giải lao dài hạn!',
+    'hh|Vô địch rồi! Từ hôm nay cả đội được miễn… khiêm tốn trong 5 phút!',
+    'th|Chung tay góp sức một lòng\nĐội ta chiến thắng, thành công rạng ngời.',
+    'th|Vai kề vai bước cùng nhau\nCúp vàng về với đội đầu xứng danh.',
+    'toan|Mỗi thành viên là một ẩn số, và cả đội là nghiệm đẹp nhất!',
+    'toan|Tổng của những nỗ lực riêng đã tạo nên chiến thắng chung. Chúc mừng!',
+    'ng|Đội vô địch! Tuyệt vời!',
+    'ng|Chúc mừng cả đội! Xứng đáng lắm!',
+    'tc|Thầy cô rất tự hào khi thấy các em đoàn kết và hết mình như vậy!',
+    'tc|Chiến thắng ngọt ngào nhất là chiến thắng có bạn bè cùng chia vui!',
+    'cc|Hãy giữ tinh thần đồng đội này cho mọi thử thách phía trước!',
+    'tt|Ghi nhận tinh thần đoàn kết và thành tích xuất sắc của toàn đội.',
+    'hh|Cả đội thắng rồi, giờ chỉ còn tranh luận: ai là người góp công nhiều nhất!',
+    'cc|Không ai bị bỏ lại phía sau, đó mới là chiến thắng thật sự!',
+    'tc|Cảm ơn các em đã cho cả lớp những phút giây cổ vũ đầy cảm xúc!',
+    'toan|Một cộng một lớn hơn hai, đó là phép màu của tinh thần đồng đội!'
+  ],
+  progress: [
+    'cc|Mỗi ngày tiến thêm một chút, em đã làm được điều tuyệt vời!',
+    'cc|Tiến bộ không phải là chạy nhanh nhất, mà là không bao giờ dừng lại. Chúc mừng em!',
+    'tc|Thầy cô đã thấy rõ sự cố gắng của em từng ngày. Hãy tự hào về bản thân nhé!',
+    'tc|Em của hôm nay đã giỏi hơn em của hôm qua. Thật đáng khen!',
+    'toan|Đồ thị kết quả học tập của em đang đồng biến rất đẹp. Cứ thế tiến lên!',
+    'toan|Đạo hàm của sự cố gắng luôn dương, nên kết quả chỉ có tăng thôi!',
+    'toan|Từ điểm xuất phát đến hôm nay, vectơ tiến bộ của em thật ấn tượng!',
+    'hh|Tiến bộ nhanh đến mức điểm số cũng phải chạy theo không kịp!',
+    'hh|Cẩn thận nhé, cứ đà này em sẽ vượt qua cả… thầy cô!',
+    'th|Mỗi ngày một bước đi lên\nKiên trì bền bỉ, vững bền tương lai.',
+    'th|Có công mài sắt có ngày nên kim. Em đã chứng minh điều đó!',
+    'ng|Tiến bộ vượt bậc! Chúc mừng em!',
+    'ng|Giỏi lắm! Cứ thế phát huy nhé!',
+    'tt|Ghi nhận sự tiến bộ vượt bậc của em trong học tập. Chúc em tiếp tục phát huy.',
+    'cc|Hành trình ngàn dặm bắt đầu từ một bước chân, và em đang đi rất vững!',
+    'tc|Cảm ơn em vì đã không bỏ cuộc. Kết quả hôm nay là của chính em!',
+    'cc|Hãy nhớ cảm giác hôm nay, đó là năng lượng cho những bước tiếp theo!',
+    'hh|Điểm số của em tăng nhanh hơn cả giá trà sữa!',
+    'tc|Cả lớp vỗ tay cho người đã thay đổi bản thân mạnh mẽ nhất!',
+    'toan|Giới hạn của em là vô cùng, hãy cứ tiếp tục tiến lên!'
+  ],
+  explain: [
+    'tc|Cách giải thích của em giúp cả lớp hiểu bài sâu hơn. Cảm ơn em!',
+    'cc|Hiểu một điều là giỏi, giúp người khác hiểu mới là tuyệt vời!',
+    'cc|Em có khả năng biến điều khó thành dễ. Đó là một tài năng thật sự!',
+    'tt|Ghi nhận em đã có phần trình bày rõ ràng, mạch lạc và thuyết phục nhất.',
+    'hh|Giải thích hay đến mức thầy cô cũng muốn… nghỉ giảng để em lên dạy!',
+    'hh|Nghe em giảng xong, bài khó tự nhiên thấy… dễ thương hẳn ra!',
+    'toan|Lời giải của em ngắn gọn, chặt chẽ, đẹp như một định lý!',
+    'toan|Em không chỉ tìm ra đáp số mà còn chỉ cho cả lớp con đường đi đến đáp số!',
+    'toan|Lập luận của em chặt chẽ như một chứng minh hoàn chỉnh. Tuyệt vời!',
+    'th|Lời em sáng tựa ánh đèn\nSoi đường bài khó, lối quen bạn tìm.',
+    'th|Một lời giảng, cả lớp thông\nBài khó hóa dễ, trong lòng sáng ra.',
+    'ng|Giải thích quá hay! Cảm ơn em!',
+    'ng|Dễ hiểu, rõ ràng, thuyết phục. Xuất sắc!',
+    'tc|Nhờ em, nhiều bạn đã hiểu bài hơn hôm nay. Đó là món quà lớn cho cả lớp!',
+    'cc|Hãy tiếp tục chia sẻ hiểu biết, vì tri thức càng cho đi càng nhân lên!',
+    'tt|Trân trọng ghi nhận khả năng diễn đạt và tư duy mạch lạc của em.',
+    'hh|Micro này xin trao lại cho "giáo sư nhí" của lớp mình!',
+    'cc|Người dạy được người khác là người hiểu sâu nhất. Chúc mừng em!',
+    'tc|Cảm ơn em vì đã kiên nhẫn giải thích cho các bạn đến cùng.',
+    'toan|Em đã biến bài toán khó thành một chuỗi bước giản đơn. Đó là nghệ thuật!'
+  ],
+  helper: [
+    'tc|Cảm ơn em đã đồng hành và nâng đỡ các bạn.',
+    'tc|Sự tử tế của em làm cả lớp ấm áp hơn mỗi ngày.',
+    'cc|Giúp đỡ người khác là cách tuyệt vời nhất để chính mình tỏa sáng!',
+    'cc|Một bàn tay nâng đỡ có thể thay đổi cả một ngày của ai đó. Em đã làm được điều đó!',
+    'tt|Ghi nhận tinh thần tương thân tương ái và sự nhiệt tình giúp đỡ bạn bè của em.',
+    'hh|Lớp mình có một siêu anh hùng không cần áo choàng, đó chính là em!',
+    'hh|Em giúp bạn nhiều đến mức nên mở hẳn… tổng đài hỗ trợ của lớp!',
+    'th|Bàn tay em ấm tình thân\nGiúp bạn vượt khó, ân cần sẻ chia.',
+    'th|Lá lành đùm lá rách, em đã sống đúng như vậy!',
+    'toan|Niềm vui được chia sẻ sẽ được nhân lên, em đã làm phép nhân đẹp nhất!',
+    'toan|Em là điểm tựa giúp các bạn giải được những bài toán khó nhất.',
+    'ng|Cảm ơn em, người bạn tốt bụng nhất!',
+    'ng|Tấm lòng vàng của lớp! Cảm ơn em!',
+    'tc|Các bạn sẽ còn nhớ mãi những lần em kiên nhẫn giảng lại bài.',
+    'cc|Hãy giữ mãi trái tim ấm áp này, thế giới cần thêm nhiều người như em!',
+    'tt|Trân trọng tuyên dương em vì đã luôn sẵn lòng hỗ trợ các bạn trong học tập.',
+    'hh|Cảnh báo: ở gần em rất dễ bị lây… sự tốt bụng!',
+    'tc|Có em, không bạn nào phải thấy mình một mình.',
+    'cc|Một lớp học mạnh là lớp học biết nâng đỡ nhau, và em là hạt nhân của điều đó!',
+    'tc|Thầy cô cảm ơn em vì đã làm thay thầy cô những điều thật ý nghĩa.'
+  ],
+  diligent: [
+    'cc|Sự kiên trì của em là tấm gương cho cả lớp.',
+    'cc|Thiên tài là một phần trăm cảm hứng và chín mươi chín phần trăm mồ hôi. Em đang đi đúng đường!',
+    'tc|Thầy cô luôn trân trọng từng trang vở chỉn chu và từng bài tập đầy đủ của em.',
+    'tt|Ghi nhận tinh thần học tập chăm chỉ, nghiêm túc và bền bỉ của em.',
+    'hh|Chăm chỉ đến mức bài tập về nhà cũng… sợ em!',
+    'hh|Em làm bài đều đặn hơn cả đồng hồ báo thức!',
+    'th|Có công mài sắt có ngày\nNên kim sáng chói, đủ đầy thành công.',
+    'th|Ngày ngày chăm chỉ học hành\nTương lai rộng mở, bước nhanh tới đích.',
+    'toan|Cố gắng mỗi ngày một chút, cộng dồn lại thành cả một chặng đường dài!',
+    'toan|Chuỗi ngày chăm chỉ của em là một cấp số cộng của thành công!',
+    'ng|Chăm chỉ số một! Chúc mừng em!',
+    'ng|Bền bỉ và đáng khen! Tuyệt lắm!',
+    'tc|Không ai thấy hết những buổi em miệt mài, nhưng kết quả hôm nay đã nói lên tất cả.',
+    'cc|Chăm chỉ là tài năng ai cũng có thể rèn luyện, và em đã rèn rất tốt!',
+    'tt|Trân trọng tuyên dương em vì luôn hoàn thành nhiệm vụ học tập đầy đủ, đúng hạn.',
+    'hh|Nếu chăm chỉ có cúp thì em phải được… cả tủ!',
+    'tc|Cảm ơn em đã là tấm gương để các bạn noi theo.',
+    'cc|Hôm nay là hạt giống, ngày mai sẽ là trái ngọt. Cứ chăm chỉ như thế em nhé!',
+    'toan|Tích lũy từng chút một, tổng của em đã tiến rất xa!',
+    'tc|Sự chăm chỉ của em là món quà lớn nhất em dành cho chính mình.'
+  ],
+  creative: [
+    'cc|Cách nghĩ độc đáo của em làm bài học thêm thú vị.',
+    'cc|Sáng tạo là trí thông minh đang vui chơi, và em chơi rất giỏi!',
+    'tc|Ý tưởng của em đã làm cả lớp bất ngờ và thích thú. Cảm ơn em!',
+    'tt|Ghi nhận những ý tưởng sáng tạo, mới mẻ và giàu giá trị của em.',
+    'hh|Ý tưởng của em mới đến mức sách giáo khoa cũng phải… cập nhật!',
+    'hh|Bộ não của em chắc có thêm vài… tầng ý tưởng bí mật!',
+    'th|Ý hay như cánh chim bay\nĐưa em vượt khỏi những ngày lối xưa.',
+    'th|Nghĩ khác mới thấy điều hay\nSáng tạo mỗi lúc mỗi ngày một hơn.',
+    'toan|Một bài toán có nhiều cách giải, và em luôn tìm ra cách đẹp nhất!',
+    'toan|Em đã nhìn bài toán từ một góc độ mà không ai nghĩ tới. Tuyệt vời!',
+    'ng|Ý tưởng quá đỉnh! Chúc mừng em!',
+    'ng|Sáng tạo xuất sắc! Tiếp tục nhé!',
+    'tc|Mỗi ý tưởng của em là một món quà cho lớp học.',
+    'cc|Đừng bao giờ ngừng hỏi "nếu như…", vì đó là nơi mọi phát minh bắt đầu!',
+    'tt|Trân trọng tuyên dương em vì tinh thần đổi mới và tư duy sáng tạo.',
+    'hh|Em mà sáng tạo thêm nữa là lớp mình phải đăng ký… bản quyền!',
+    'cc|Thế giới cần những người dám nghĩ khác, và em là một trong số đó!',
+    'tc|Cảm ơn em đã mang màu sắc mới cho những giờ học.',
+    'toan|Lời giải của em như một định lý mới: gọn gàng và đầy bất ngờ!',
+    'cc|Hãy cứ tò mò, cứ thử nghiệm, vì sai lầm cũng là một phần của sáng tạo!'
+  ],
+  custom: [
+    'tc|Chúc mừng em! Thầy cô và cả lớp rất tự hào!',
+    'cc|Thành công hôm nay là kết quả của những nỗ lực bền bỉ. Hãy tiếp tục tỏa sáng!',
+    'tt|Xin trân trọng chúc mừng và ghi nhận thành tích đáng tự hào của em.',
+    'hh|Danh hiệu này dành cho người xứng đáng nhất, và cả lớp đều đồng ý!',
+    'ng|Xứng đáng! Chúc mừng em!',
+    'th|Hôm nay rạng rỡ niềm vui\nVinh danh em đó, ngọt bùi công lao.',
+    'toan|Em đã chứng minh: cố gắng luôn cho ra kết quả đẹp!',
+    'cc|Hãy xem đây là động lực để em bay cao hơn nữa!',
+    'tc|Cảm ơn em vì những đóng góp ý nghĩa cho tập thể lớp.',
+    'tt|Chúc mừng em với danh hiệu cao quý này. Chúc em luôn giữ vững phong độ.',
+    'hh|Cả lớp vỗ tay thật to lên nào, vỗ nhỏ là… phải vỗ lại!',
+    'ng|Tuyệt vời! Cả lớp tự hào về em!',
+    'cc|Em là minh chứng rằng mỗi người đều có thể tỏa sáng theo cách riêng!',
+    'tc|Một khoảnh khắc đáng nhớ dành cho một người thật đặc biệt!',
+    'toan|Thành tích của em là một hằng số đáng tin cậy của lớp mình!',
+    'th|Chúc em vững bước đi xa\nNgày mai rực rỡ như hoa đầu mùa.',
+    'tt|Ghi nhận và biểu dương những nỗ lực đáng quý của em.',
+    'hh|Danh hiệu này nặng ký lắm, nhớ khoe với cả nhà nhé!',
+    'cc|Hôm nay em là ngôi sao, ngày mai hãy là cả bầu trời!',
+    'tc|Chúc em luôn giữ được nhiệt huyết và niềm vui như hôm nay!'
+  ]
+};
+const wishList = t => (WISH[t] || WISH.custom).map(w => { const i = w.indexOf('|'); return { st: w.slice(0, i), tx: w.slice(i + 1) }; });
+
 /* Ảnh người được chúc mừng: thu nhỏ còn 640 điểm ảnh, lưu trong máy (localStorage) */
 const AVA_KEY = 'san-khau-chuc-mung-ava';
 let AVA = []; try { AVA = JSON.parse(localStorage.getItem(AVA_KEY) || '[]').filter(x => typeof x === 'string' && x.startsWith('data:image/')); } catch (e) {}
@@ -690,7 +1042,7 @@ const SONGS = {
 
 /* ---------- Lưu thiết lập ---------- */
 const KEY = 'san-khau-chuc-mung-v1';
-const DEF = { type: 'birthday', names: '', sub: '', title: '', age: '', podium: false, intro: 'drum', music: 'builtin', vol: .75, boom: true, clap: true,
+const DEF = { type: 'birthday', names: '', sub: '', title: '', age: '', podium: false, intro: 'drum', music: 'net', pick: { bday: '', win: '' }, wishMode: 'rand', wishOff: {}, vol: .75, boom: true, clap: true,
   photo: { on: true, sec: 8, fx: 'kb', dark: 45, tint: 35, shuffle: false },
   density: 'mid', fx: { fw: true, confetti: true, balloon: true, stars: true, emoji: true, rays: true }, interval: 10, mic: false };
 const S = (() => {
@@ -698,6 +1050,9 @@ const S = (() => {
   try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (o) return Object.assign(d, o, { fx: Object.assign(d.fx, o.fx || {}), photo: Object.assign(d.photo, o.photo || {}) }); } catch (e) {}
   return d;
 })();
+/* Bản mới: mặc định phát nhạc ngẫu nhiên từ danh sách bài của thầy (đổi một lần cho máy đã lưu thiết lập cũ) */
+if (!S.musicV2) { if (S.music === 'builtin') S.music = 'net'; S.musicV2 = 1; }
+if (!S.pick || typeof S.pick !== 'object') S.pick = { bday: '', win: '' };
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 
 let toastT = 0;
@@ -894,12 +1249,19 @@ function netPlay(kind) {
     if (++NET.fails >= NET.list.length) { toast('Không tải được bài hát, chuyển sang giai điệu có sẵn'); netStop(); songStart(kind); }
     else netNext();
   });
-  netNext();
+  const k = S.pick && S.pick[kind]; netNext(k !== '' && k != null && l0(kind)[+k] ? l0(kind)[+k] : null);
 }
-function netNext() {
-  const a = NET.a; if (!a) return; const l = NET.list; let u;
-  do { u = pick(l); } while (l.length > 1 && u === NET.last);
+function l0(kind) { return SONGS[kind] || []; }
+function netNext(want) {
+  const a = NET.a; if (!a) return; const l = NET.list; let u = want;
+  if (!u) do { u = pick(l); } while (l.length > 1 && u === NET.last);
   NET.last = u; a.src = u; a.play().catch(() => {});
+  const i = l.indexOf(u); if (i >= 0 && RUN.on && !want) toast('🎵 ' + (NET.kind === 'bday' ? 'Nhạc sinh nhật' : 'Nhạc vinh danh') + ' · bài ' + (i + 1), 1400);
+}
+/* Đổi bài khi đang chiếu (nút 🔀, phím S, điều khiển từ xa) */
+function songSwap() {
+  if (S.music !== 'net') { toast('Đang dùng giai điệu có sẵn · chọn "Nhạc ngẫu nhiên" ở mục Âm thanh để đổi bài', 2600); return; }
+  if (NET.a) netNext(); else if (RUN.on) netPlay(RUN.T.song);
 }
 function netStop() { const a = NET.a; if (!a) return; NET.a = null; try { a.pause(); a.removeAttribute('src'); a.load(); } catch (e) {} }
 function musicStart(kind) { if (S.music === 'off') return; if (S.music === 'net') netPlay(kind); else songStart(kind); }
@@ -1211,6 +1573,17 @@ function medalSVG(T) {
 
 /* =================== CHẠY SÂN KHẤU =================== */
 const isBday = t => !!(TYPES[t] && TYPES[t].bday);
+/* Lời chúc cho người thứ i: ngẫu nhiên không lặp trong một lần chiếu, giữ nguyên khi chiếu lại người đó */
+const offMap = () => (S.wishOff && !Array.isArray(S.wishOff) && typeof S.wishOff === 'object') ? S.wishOff : {};
+function wishFor(i) {
+  const T = RUN.T;
+  if (S.wishMode !== 'rand') return S.sub.trim() || T.sub;
+  RUN.wish = RUN.wish || {}; if (RUN.wish[i]) return RUN.wish[i];
+  const off = new Set(offMap()[RUN.type] || []), all = wishList(RUN.type), pool = all.filter(w => !off.has(w.st));
+  const src = pool.length ? pool : all, used = new Set(Object.values(RUN.wish));
+  let cand = src.filter(w => !used.has(w.tx)); if (!cand.length) cand = src;
+  return RUN.wish[i] = cand[Math.random() * cand.length | 0].tx;
+}
 const RUN = { on: false, id: 0, type: 'birthday', T: null, names: [], idx: 0, podium: false, fxOn: false, tick: 0, raf: 0, last: 0, relight: 0 };
 
 function letters(str, base) {
@@ -1244,7 +1617,7 @@ function kickText() {
 function emblem(T) { return T.emblem === 'cake' ? cakeSVG(String(S.age || '').trim()) : T.emblem === 'trophy' ? trophySVG() : medalSVG(T); }
 
 function renderShow() {
-  const T = RUN.T, name = RUN.names[RUN.idx] || '', sub = S.sub.trim() || T.sub;
+  const T = RUN.T, name = RUN.names[RUN.idx] || '', sub = wishFor(RUN.idx);
   const cake = T.emblem === 'cake', ava = isBday(RUN.type) ? avaFor(RUN.idx) : '';
   const emb = `<div class="emblem ${T.emblem}" ${cake ? 'role="button" tabindex="0" aria-label="Thổi nến" data-act="blow" title="Bấm để thổi nến (B)"' : ''}>${emblem(T)}</div>`;
   show.className = 'show t-' + T.style + (ava ? ' has-ava' : '');
@@ -1264,7 +1637,7 @@ function renderShow() {
   updateHud();
 }
 function renderPodium() {
-  const T = RUN.T, n = RUN.names, sub = S.sub.trim() || T.subPod || T.sub;
+  const T = RUN.T, n = RUN.names, sub = S.wishMode === 'rand' ? (T.subPod || T.sub) : (S.sub.trim() || T.subPod || T.sub);
   const col = i => n[i] ? `<div class="pd p${i + 1}" style="--d:${[1.9, 1.1, .3][i]}s"><div class="pd-name">${esc(n[i])}</div><div class="pd-block"><span class="pd-med">${['🥇', '🥈', '🥉'][i]}</span><b>${i + 1}</b></div></div>` : '';
   show.className = 'show t-' + T.style;
   show.innerHTML = `<div class="emblem trophy small">${trophySVG()}</div><div class="kicker">${letters(kickText(), 0)}</div>
@@ -1391,7 +1764,7 @@ function runLocal() {
   const names = S.names.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
   if (!names.length) return;
   ac(); $('#standby').hidden = true;
-  RUN.id++; RUN.on = true; RUN.type = TYPES[S.type] ? S.type : 'birthday'; RUN.T = TYPES[RUN.type]; RUN.names = names; RUN.idx = 0;
+  RUN.id++; RUN.on = true; RUN.wish = {}; RUN.type = TYPES[S.type] ? S.type : 'birthday'; RUN.T = TYPES[RUN.type]; RUN.names = names; RUN.idx = 0;
   RUN.podium = S.podium && (S.type === 'victory' || S.type === 'team') && names.length >= 2;
   RUN.fxOn = false; RUN.tick = 0;
   D = RM ? DEN.low : DEN[S.density] || DEN.mid;
@@ -1419,6 +1792,7 @@ function updateHud() {
   const multi = !RUN.podium && RUN.names.length > 1;
   $('#hudNav').hidden = !multi; $('#hudPos').textContent = (RUN.idx + 1) + '/' + RUN.names.length;
   $('#hudBlow').hidden = !isBday(RUN.type) || RUN.podium;
+  $('#hudSong').hidden = S.music !== 'net';
   report();
 }
 
@@ -1596,6 +1970,15 @@ document.addEventListener('dragover', e => { if (!RUN.on) e.preventDefault(); })
 document.addEventListener('drop', e => { if (!RUN.on && !e.target.closest('#drop')) { e.preventDefault(); if (e.dataTransfer && e.dataTransfer.files.length) addFiles(e.dataTransfer.files); } });
 $('#thumbs').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (b) delPhoto(b.dataset.del); });
 $('#btnClearPhotos').addEventListener('click', clearPhotos);
+$('#wishList').addEventListener('click', e => {
+  const b = e.target.closest('[data-wi]'); if (!b) return;
+  const w = wishList(curType())[+b.dataset.wi]; $('#fSub').value = w.tx; form.wishMode.value = 'own';
+  readForm(); save(); syncWish(); $('#fSub').focus(); toast('Đã chép lời chúc, thầy sửa thêm nếu muốn', 1600);
+});
+$('#wishDice').addEventListener('click', () => {
+  const L = wishList(curType()), cur = $('#fSub').value.trim(); let w; do { w = L[Math.random() * L.length | 0]; } while (L.length > 1 && w.tx === cur);
+  $('#fSub').value = w.tx; readForm(); save(); syncWish();
+});
 $('#avaPick').addEventListener('click', e => {
   const d = e.target.closest('[data-ava-del]'); if (d) { AVA.splice(+d.dataset.avaDel, 1); avaSave(); renderAva(); return; }
   if (e.target.closest('#avaAdd')) $('#fAva').click();
@@ -1655,7 +2038,7 @@ function onMsg(m, l) {
     else if (m.t === 'ava-end') { if (TVAVA.inbox) { TVAVA.list = TVAVA.inbox; TVAVA.inbox = null; } }
     else if (m.t === 'start' && m.s) { stopIfRunning(); Object.assign(S, m.s, { fx: Object.assign({}, DEF.fx, m.s.fx || {}) }); setVol(S.vol); runLocal(); }
     else if (m.t === 'stop') { if (RUN.on) stop(); }
-    else if (m.t === 'act' && RUN.on && ['prev', 'next', 'blow', 'fw', 'conf', 'replay', 'photo'].includes(m.a)) act(m.a);
+    else if (m.t === 'act' && RUN.on && ['prev', 'next', 'blow', 'fw', 'conf', 'replay', 'photo', 'song'].includes(m.a)) act(m.a);
     else if (m.t === 'mute') { if (A.muted !== !!m.m) toggleMute(); report(); }
     else if (m.t === 'vol') setVol(clamp(+m.v || 0, 0, 1));
   } else if (LINK.role === 'ctrl' && m.t === 'state') {
@@ -1817,6 +2200,7 @@ function act(a) {
     case 'conf': cannon(-1); cannon(1); break;
     case 'replay': replay(); break;
     case 'photo': photoNext(true); break;
+    case 'song': songSwap(); break;
     case 'mute': toggleMute(); break;
     case 'fs': fullscreen(); break;
   }
@@ -1849,6 +2233,7 @@ document.addEventListener('keydown', e => {
   else if (/^[cC]$/.test(k)) act('conf');
   else if (/^[rR]$/.test(k)) replay();
   else if (/^[nN]$/.test(k)) photoNext(true);
+  else if (/^[sS]$/.test(k)) songSwap();
   else if (/^[mM]$/.test(k)) toggleMute();
   else if (/^[fF]$/.test(k)) fullscreen();
   else if (k === '+' || k === '=' || k === '-') { setVol(clamp(Math.round((S.vol + (k === '-' ? -.1 : .1)) * 10) / 10, 0, 1)); save(); $('#fVol').value = S.vol * 100; $('#volOut').textContent = Math.round(S.vol * 100) + '%'; toast('Âm lượng ' + Math.round(S.vol * 100) + '%', 1200); }
@@ -1859,7 +2244,7 @@ const form = $('#form');
 $('#types').innerHTML = Object.entries(TYPES).filter(([k, t]) => t.grp !== 'bday').map(([k, t]) => `<label class="chip"><input type="radio" name="type" value="${k}"><span class="ic" aria-hidden="true">${t.ic}</span><span>${t.label}</span></label>`).join('');
 function fillForm() {
   form.type.value = isBday(S.type) ? 'birthday' : S.type; form.bdfor.value = isBday(S.type) ? S.type : 'birthday'; form.intro.value = S.intro; form.density.value = S.density;
-  $('#fNames').value = S.names; $('#fSub').value = S.sub; $('#fTitle').value = S.title; $('#fAge').value = S.age;
+  $('#fNames').value = S.names; $('#fSub').value = S.sub; form.wishMode.value = S.wishMode || 'rand'; $('#fTitle').value = S.title; $('#fAge').value = S.age;
   $('#fInterval').value = S.interval; $('#fPodium').checked = S.podium; $('#fMusic').value = S.music;
   $('#fVol').value = Math.round(S.vol * 100); $('#volOut').textContent = Math.round(S.vol * 100) + '%';
   $('#fBoom').checked = S.boom; $('#fClap').checked = S.clap; $('#fMic').checked = S.mic;
@@ -1892,7 +2277,7 @@ async function avaAdd(files) {
 }
 function readForm() {
   S.type = curType(); S.intro = form.intro.value || 'drum'; S.density = form.density.value || 'mid';
-  S.names = $('#fNames').value; S.sub = $('#fSub').value; S.title = $('#fTitle').value; S.age = $('#fAge').value;
+  S.names = $('#fNames').value; S.sub = $('#fSub').value; S.wishMode = form.wishMode.value || 'rand'; if ($$('#wishStyles input').length) S.wishOff = Object.assign({}, offMap(), { [curType()]: $$('#wishStyles input').filter(c => !c.checked).map(c => c.value) }); S.title = $('#fTitle').value; S.age = $('#fAge').value;
   S.interval = clamp(parseInt($('#fInterval').value, 10) || 10, 4, 120); S.podium = $('#fPodium').checked; S.music = $('#fMusic').value;
   S.vol = (+$('#fVol').value) / 100; S.boom = $('#fBoom').checked; S.clap = $('#fClap').checked; S.mic = $('#fMic').checked;
   S.photo = { on: $('#fPhotoOn').checked, sec: clamp(parseInt($('#fPhotoSec').value, 10) || 8, 3, 120), fx: $('#fPhotoFx').value,
@@ -1900,19 +2285,38 @@ function readForm() {
   $('#photoOpts').setAttribute('aria-disabled', String(!S.photo.on));
   $$('[data-fx]').forEach(c => S.fx[c.dataset.fx] = c.checked);
 }
+function syncSong() {
+  const kind = (TYPES[curType()] || TYPES.birthday).song, L = l0(kind), cur = (S.pick && S.pick[kind]) || '';
+  $('#rowSong').hidden = $('#fMusic').value !== 'net';
+  $('#songLbl').textContent = kind === 'bday' ? 'Bài nhạc sinh nhật' : 'Bài nhạc vinh danh, chiến thắng';
+  $('#fSong').innerHTML = `<option value="">🔀 Ngẫu nhiên mỗi lần chiếu (${L.length} bài)</option>` + L.map((u, i) => `<option value="${i}">${kind === 'bday' ? '🎂 Nhạc sinh nhật' : '🏆 Nhạc chiến thắng'} ${i + 1}</option>`).join('');
+  $('#fSong').value = String(cur); $('#fSong').dataset.kind = kind;
+}
+function syncWish() {
+  const t = curType(), L = wishList(t), mode = form.wishMode.value || 'rand', off = new Set(offMap()[t] || []);
+  $('#wishRand').hidden = mode !== 'rand'; $('#wishOwn').hidden = mode !== 'own';
+  const st = [...new Set(L.map(w => w.st))];
+  $('#wishStyles').innerHTML = st.map(k => `<label class="fchip"><input type="checkbox" value="${k}"${off.has(k) ? '' : ' checked'}><span>${WSTYLE[k]} · ${L.filter(w => w.st === k).length}</span></label>`).join('');
+  const cur = $('#fSub').value.trim();
+  $('#wishList').innerHTML = L.map((w, i) => `<button type="button" class="witem${cur === w.tx ? ' on' : ''}" data-wi="${i}"><b>${WSTYLE[w.st]}</b><span>${esc(w.tx)}</span></button>`).join('');
+  $('#wishCount').textContent = '· ' + (TYPES[t].who || TYPES[t].label);
+}
 function curType() { const t = form.type.value || 'birthday'; return t === 'birthday' ? ((form.bdfor && form.bdfor.value) || 'birthday') : t; }
 function syncType() {
   const t = curType(), T = TYPES[t], bday = isBday(t);
-  $('#rowFor').hidden = !bday; $('#rowAva').hidden = !bday; renderAva();
+  $('#rowFor').hidden = !bday; $('#rowAva').hidden = !bday; renderAva(); syncSong();
   $('#rowTitle').hidden = t !== 'custom'; $('#rowAge').hidden = !bday; $('#rowMic').hidden = !bday; $('#micHint').hidden = !bday;
   $('#rowPodium').hidden = !(t === 'victory' || t === 'team');
   $('#subLbl').textContent = bday ? 'Lời chúc' : 'Dòng phụ';
-  $('#fSub').placeholder = T.sub;
+  syncWish();
   $('#fNames').placeholder = t === 'team' ? 'Đội Pi\nĐội Euler' : T.names || 'Nguyễn Minh Anh\nTrần Bảo Ngọc';
   applyTheme(T);
 }
 form.addEventListener('change', e => {
   if (e.target.name === 'type' || e.target.name === 'bdfor') syncType();
+  if (e.target.id === 'fMusic') syncSong();
+  if (e.target.name === 'wishMode') { readForm(); syncWish(); }
+  if (e.target.id === 'fSong') { S.pick = Object.assign({ bday: '', win: '' }, S.pick, { [e.target.dataset.kind]: e.target.value }); if (testing) testStop(); }
   readForm(); save();
   if (e.target.id === 'fNames' || e.target.id === 'fTitle') { $('#namesErr').hidden = true; $('#titleErr').hidden = true; }
 });
