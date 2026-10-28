@@ -53,6 +53,43 @@ button,input,select,textarea{font:inherit;color:inherit}
 .show.in .emblem.trophy,.show.in .emblem.medal{animation:dropIn .9s cubic-bezier(.2,1.5,.4,1) forwards,swing 3.2s ease-in-out 1s infinite}
 .show .emblem.cake{cursor:pointer}
 .show .emblem.small{width:clamp(70px,14vh,150px)}
+/* Ảnh người được chúc mừng ở giữa sân khấu */
+.show.has-ava{gap:clamp(4px,1.1vh,12px)}
+.show.has-ava .kicker{font-size:clamp(13px,min(2.6vw,3.8vh),40px)}
+.show.has-ava .name{font-size:min(9vw,12.5vh)}
+.show.has-ava .sub{font-size:clamp(14px,min(2.4vw,3.4vh),34px)}
+.ava{--ava:min(40vh,44vw);position:relative;width:var(--ava);height:var(--ava);flex:none;opacity:0;transform:scale(.35) rotate(-8deg);filter:blur(10px);margin:clamp(6px,1.4vh,16px) 0}
+.show.in .ava{animation:avaIn 1.2s cubic-bezier(.2,1.35,.4,1) .3s forwards}
+.ava-ph{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#000;box-shadow:0 0 0 clamp(4px,.7vh,8px) #fff,0 0 70px var(--glow),0 20px 60px rgba(0,0,0,.45)}
+.ava-ph img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
+.ava-ring{position:absolute;inset:-7%;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,var(--c2),#fff,var(--c2),transparent 55%,var(--c2));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));animation:avaSpin 7s linear infinite}
+.ava-deco{position:absolute;inset:-14%;pointer-events:none;animation:avaSpin 26s linear infinite}
+.ava-deco i{position:absolute;left:50%;top:50%;font-style:normal;font-size:calc(var(--ava)*.1);transform:rotate(var(--a)) translateY(calc(var(--ava)*-.64)) rotate(calc(-1*var(--a)));margin:-.6em 0 0 -.5em;animation:avaTw 2.4s ease-in-out infinite;animation-delay:var(--d)}
+.show .ava .emblem{position:absolute;right:-12%;bottom:-10%;width:calc(var(--ava)*.36);z-index:2}
+/* Vợ: viền hồng, ảnh đập nhẹ như nhịp tim */
+.ava.heart .ava-ring{background:conic-gradient(from 0deg,#ff2e63,#ffd1dc,#ff4d8d,#fff,#ff2e63)}
+.show.in .ava.heart .ava-ph{animation:avaBeat 1.6s ease-in-out 1.6s infinite}
+/* Cha mẹ: hai vòng vàng sang trọng */
+.ava.gold .ava-ph{box-shadow:0 0 0 clamp(4px,.7vh,8px) #ffe7a3,0 0 0 clamp(8px,1.3vh,14px) #b8862b,0 0 80px rgba(255,200,90,.6),0 20px 60px rgba(0,0,0,.45)}
+.ava.gold .ava-ring{inset:-10%;background:conic-gradient(from 0deg,#ffd36b,#fff3c4,#b8862b,#ffd36b,#fff3c4,#b8862b,#ffd36b);animation-duration:14s}
+/* Bạn bè: ảnh kiểu polaroid nghiêng, có băng dính */
+.ava.polaroid{--ava:min(40vh,40vw)}
+.ava.polaroid .ava-ph{border-radius:6px;padding:5% 5% 18%;background:#fff;box-shadow:0 22px 60px rgba(0,0,0,.5),0 0 60px var(--glow);transform:rotate(-4deg)}
+.ava.polaroid .ava-ph img{border-radius:2px}
+.ava.polaroid .ava-ph::after{content:"🎉 Happy Birthday";position:absolute;left:0;right:0;bottom:4%;text-align:center;color:#3a2f7a;font-weight:800;font-size:calc(var(--ava)*.072)}
+.ava.polaroid::before{content:"";position:absolute;left:36%;top:-5%;width:30%;height:10%;background:rgba(255,230,140,.75);transform:rotate(3deg);z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.ava.polaroid .ava-ring{display:none}
+/* Đồng nghiệp: khung vuông bo góc, viền vàng mảnh */
+.ava.frame .ava-ph{border-radius:18%;box-shadow:0 0 0 3px #e8c77a,0 0 0 clamp(8px,1.2vh,12px) rgba(232,199,122,.18),0 0 60px rgba(232,199,122,.35),0 20px 60px rgba(0,0,0,.5)}
+.ava.frame .ava-ring{display:none}
+/* Con yêu: vòng cầu vồng, nảy nhẹ */
+.ava.rainbow .ava-ring{inset:-8%;background:conic-gradient(#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff,#ff6b6b);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px));mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px));animation-duration:5s}
+.show.in .ava.rainbow{animation:avaIn 1.2s cubic-bezier(.2,1.35,.4,1) .3s forwards,avaBob 2.6s ease-in-out 1.6s infinite}
+@keyframes avaIn{to{opacity:1;transform:none;filter:none}}
+@keyframes avaSpin{to{transform:rotate(360deg)}}
+@keyframes avaBeat{0%,100%{transform:scale(1)}12%{transform:scale(1.035)}24%{transform:scale(1)}36%{transform:scale(1.025)}}
+@keyframes avaBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes avaTw{0%,100%{opacity:.55;scale:.85}50%{opacity:1;scale:1.15}}
 
 .kicker{font-weight:800;letter-spacing:.14em;font-size:clamp(14px,min(3.1vw,4.6vh),46px);color:#fff;white-space:nowrap;
   text-shadow:0 0 .5em var(--glow),0 2px 0 rgba(0,0,0,.35)}
@@ -143,6 +180,24 @@ button,input,select,textarea{font:inherit;color:inherit}
 .sec:first-child{border-top:0}
 .sec h2{margin:0 0 var(--s3);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .types{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s2)}
+.for-row{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:12px;border-radius:var(--radius-sm);border:1px dashed rgba(255,122,61,.45);background:rgba(255,122,61,.05)}
+.for-row[hidden]{display:none}
+.fors{display:flex;flex-wrap:wrap;gap:6px}
+.fchip{position:relative;cursor:pointer}
+.fchip input{position:absolute;opacity:0;pointer-events:none}
+.fchip span{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);font-weight:600;font-size:14px;transition:background .15s,border-color .15s}
+.fchip:hover span{border-color:var(--border-2);background:var(--surface-2)}
+.fchip input:checked+span{border-color:var(--primary);background:linear-gradient(180deg,rgba(255,122,61,.22),rgba(255,122,61,.08));box-shadow:0 0 0 3px rgba(255,122,61,.16)}
+.fchip input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
+.ava-pick{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.ava-th{position:relative;width:84px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.ava-th img{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:50% 30%;border:3px solid var(--primary);background:#000}
+.ava-th small{max-width:84px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ava-th .n{position:absolute;left:0;top:0;min-width:22px;height:22px;border-radius:11px;background:var(--primary);color:#1d0d00;font-weight:800;font-size:12px;display:grid;place-items:center}
+.ava-th button{position:absolute;right:-2px;top:-2px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.72);color:#fff;cursor:pointer;font-size:13px}
+.ava-add{width:84px;height:84px;border-radius:50%;border:2px dashed var(--border-2);background:var(--surface);color:var(--text);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:22px;font-weight:700}
+.ava-add span{font-size:11.5px;font-weight:600;color:var(--muted)}
+.ava-add:hover{border-color:var(--primary)}
 .chip{position:relative;display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;
   font-weight:600;font-size:14.5px;line-height:1.2;transition:border-color .15s,background .15s,transform .15s}
 .chip:hover{border-color:var(--border-2);background:var(--surface-2)}
@@ -240,6 +295,40 @@ body.tv-mode .hud{display:none!important}
 .sb-sound{min-height:56px;font-size:clamp(16px,1.8vw,24px)}
 @keyframes live{70%{box-shadow:0 0 0 10px rgba(94,224,160,0)}100%{box-shadow:0 0 0 0 rgba(94,224,160,0)}}
 
+/* ===== Ảnh nền ===== */
+.photos{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .8s}
+.stage.has-photos .photos{opacity:1}
+.bgi{position:absolute;inset:-3%;background:center/cover no-repeat;opacity:0;transition:opacity 1.4s ease;will-change:opacity,transform}
+.bgi.on{opacity:1}
+.bgi.kb{animation:kb var(--dur,10s) linear forwards}
+.bgi.slide{transform:translateX(6%);transition:opacity 1.2s ease,transform 1.6s var(--ease)}
+.bgi.slide.on{transform:none}
+.stage.has-photos .bg{opacity:var(--tint,.35)}
+.veil{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .8s;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%,rgba(0,0,0,calc(var(--dark,.45) * .7)),rgba(0,0,0,calc(var(--dark,.45) + .2)))}
+.stage.has-photos .veil{opacity:1}
+.stage.run.has-rays.has-photos .rays{opacity:.5}
+@keyframes kb{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.16) translate(var(--ox,0),var(--oy,0))}}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:112px;padding:var(--s4);text-align:center;cursor:pointer;
+  border:2px dashed var(--border-2);border-radius:var(--radius);background:var(--bg);transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--primary);background:rgba(255,122,61,.07)}
+.drop .drop-ic{font-size:30px;line-height:1}
+.drop b{font-size:15px}
+.drop.busy{pointer-events:none;opacity:.7}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:var(--s2);margin-top:var(--s3)}
+.thumbs:empty{display:none}
+.th{position:relative;aspect-ratio:16/10;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--surface-2)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th .n{position:absolute;left:5px;bottom:4px;font-size:12px;font-weight:700;padding:1px 6px;border-radius:6px;background:rgba(0,0,0,.6)}
+.th button{position:absolute;top:3px;right:3px;width:30px;height:30px;border-radius:8px;border:0;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;font-size:14px;opacity:.85}
+.th button:hover{background:var(--danger);opacity:1}
+.photo-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-top:var(--s2);color:var(--muted);font-size:13.5px}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13.5px}
+.range{display:flex;align-items:center;gap:var(--s3)}
+.range input{flex:1;accent-color:var(--primary);min-height:32px}
+.range output{min-width:44px;text-align:right;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+.photo-opts[aria-disabled="true"]{opacity:.5}
+
 .toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-20px);opacity:0;padding:12px 18px;border-radius:12px;background:rgba(15,12,30,.92);border:1px solid rgba(255,255,255,.16);
   font-weight:600;z-index:50;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -269,13 +358,17 @@ body.tv-mode .hud{display:none!important}
   .rays,.spots i,.flame,.shine,.drum-ic,.dots i{animation:none!important}
   .show.in .name .l{animation:lIn .01s linear forwards!important}
   .show.in .emblem{animation:dropIn .01s linear forwards!important}
+  .show.in .ava{animation:avaIn .01s linear forwards!important}
+  .ava-ring,.ava-deco,.ava-deco i,.show.in .ava.heart .ava-ph{animation:none!important}
 }
 </style>
 </head>
 <body>
 
 <div id="stage" class="stage">
+  <div class="photos" id="photos" aria-hidden="true"><div class="bgi"></div><div class="bgi"></div></div>
   <div class="bg"></div>
+  <div class="veil" aria-hidden="true"></div>
   <div class="rays" aria-hidden="true"></div>
   <div class="spots" aria-hidden="true"><i></i><i></i></div>
   <canvas id="cv" aria-hidden="true"></canvas>
@@ -293,6 +386,7 @@ body.tv-mode .hud{display:none!important}
     <button type="button" data-act="fw" title="Bắn pháo hoa (P)">🎆 <span>Pháo hoa</span></button>
     <button type="button" data-act="conf" title="Bắn pháo giấy (C)">🎊 <span>Pháo giấy</span></button>
     <button type="button" data-act="replay" title="Chiếu lại chữ (R)">🔁 <span>Chiếu lại</span></button>
+    <button type="button" data-act="photo" id="hudPhoto" title="Ảnh nền tiếp theo (N)" hidden>🖼️ <span>Ảnh sau</span></button>
     <button type="button" data-act="mute" id="hudMute" aria-pressed="false" aria-label="Tắt tiếng (M)">🔊</button>
     <button type="button" data-act="fs" aria-label="Toàn màn hình (F)">⛶</button>
   </div>
@@ -321,6 +415,7 @@ body.tv-mode .hud{display:none!important}
         <button type="button" class="btn" data-cmd="fw">🎆 Pháo hoa</button>
         <button type="button" class="btn" data-cmd="conf">🎊 Pháo giấy</button>
         <button type="button" class="btn" data-cmd="replay">🔁 Chiếu lại</button>
+        <button type="button" class="btn" data-cmd="photo">🖼️ Ảnh sau</button>
         <button type="button" class="btn" data-cmd="mute" id="remoteMute">🔊 Tắt tiếng</button>
         <button type="button" class="btn stop" data-cmd="stop">⏹ Dừng</button>
       </div>
@@ -331,6 +426,10 @@ body.tv-mode .hud{display:none!important}
         <section class="sec">
           <h2>Dịp chúc mừng</h2>
           <div class="types" id="types" role="radiogroup" aria-label="Loại hiệu ứng"></div>
+          <div class="for-row" id="rowFor" hidden>
+            <span class="lbl">Sinh nhật của</span>
+            <div class="fors" id="fors" role="radiogroup" aria-label="Sinh nhật của ai"></div>
+          </div>
         </section>
 
         <section class="sec">
@@ -345,6 +444,12 @@ body.tv-mode .hud{display:none!important}
             <textarea id="fNames" placeholder="Nguyễn Minh Anh&#10;Trần Bảo Ngọc" aria-describedby="namesHint"></textarea>
             <p class="hint" id="namesHint">Gõ nhiều tên thì sân khấu tự chuyển lần lượt từng em.</p>
             <p class="err" id="namesErr" hidden>Hãy gõ ít nhất một tên.</p>
+          </div>
+          <div class="field" id="rowAva">
+            <label for="fAva">Ảnh người được chúc mừng <span class="hint" style="display:inline;font-weight:400">· hiện ở giữa sân khấu</span></label>
+            <div class="ava-pick" id="avaPick"></div>
+            <input type="file" id="fAva" accept="image/*" multiple hidden>
+            <p class="hint" id="avaHint">Nhiều tên thì ảnh thứ nhất cho tên thứ nhất, ảnh thứ hai cho tên thứ hai… Ảnh được thu nhỏ và lưu trong máy này.</p>
           </div>
           <div class="field">
             <label for="fSub" id="subLbl">Lời chúc</label>
@@ -362,6 +467,32 @@ body.tv-mode .hud{display:none!important}
             </div>
           </div>
           <label class="sw" id="rowPodium" hidden style="margin-top:12px"><input type="checkbox" id="fPodium"> Bục vinh quang: 3 tên đầu là Nhất, Nhì, Ba</label>
+        </section>
+
+        <section class="sec">
+          <h2>Ảnh nền</h2>
+          <div class="drop" id="drop" role="button" tabindex="0" aria-describedby="dropHint">
+            <span class="drop-ic" aria-hidden="true">🖼️</span>
+            <b id="dropTitle">Kéo thả ảnh vào đây hoặc bấm để chọn</b>
+            <span class="hint" id="dropHint">Chọn được nhiều ảnh một lúc (JPG, PNG, WebP). Ảnh được thu nhỏ và lưu trong trình duyệt của máy này.</span>
+          </div>
+          <input type="file" id="fPhotos" accept="image/*" multiple hidden>
+          <div class="thumbs" id="thumbs"></div>
+          <div class="photo-bar" id="photoBar" hidden><span id="photoCount"></span><button type="button" class="btn sm" id="btnClearPhotos">🗑 Xóa tất cả</button></div>
+          <label class="sw" style="margin-top:8px"><input type="checkbox" id="fPhotoOn"> Dùng ảnh nền khi trình chiếu</label>
+          <div class="photo-opts" id="photoOpts">
+            <div class="row2">
+              <div class="field"><label for="fPhotoSec">Đổi ảnh sau (giây)</label><input type="number" id="fPhotoSec" min="3" max="120" inputmode="numeric"></div>
+              <div class="field"><label for="fPhotoFx">Kiểu chuyển ảnh</label>
+                <select id="fPhotoFx"><option value="kb">Phóng chậm</option><option value="fade">Mờ dần</option><option value="slide">Trượt ngang</option></select></div>
+            </div>
+            <div class="field"><span class="lbl" id="darkLbl">Độ tối phủ lên ảnh</span>
+              <div class="range"><input type="range" id="fPhotoDark" min="0" max="85" step="5" aria-labelledby="darkLbl"><output id="darkOut">45%</output></div>
+              <p class="hint">Tối hơn thì tên và lời chúc dễ đọc hơn.</p></div>
+            <div class="field"><span class="lbl" id="tintLbl">Phủ màu chủ đề</span>
+              <div class="range"><input type="range" id="fPhotoTint" min="0" max="80" step="5" aria-labelledby="tintLbl"><output id="tintOut">35%</output></div></div>
+            <label class="sw"><input type="checkbox" id="fPhotoShuffle"> Đổi ảnh ngẫu nhiên</label>
+          </div>
         </section>
       </div>
 
@@ -488,10 +619,38 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 /* ---------- Các loại chúc mừng ---------- */
 const GOLD = ['#ffd700', '#ffec8b', '#ffb300', '#fff3b0', '#ff9f1c', '#ffffff', '#ffcf5c'];
 const TYPES = {
-  birthday: { ic: '🎂', label: 'Sinh nhật', k: 'CHÚC MỪNG SINH NHẬT', sub: 'Chúc em tuổi mới thật nhiều niềm vui, sức khỏe và thành công!', emblem: 'cake', song: 'bday', style: 'bday', rays: false,
+  birthday: { ic: '🎂', label: 'Sinh nhật', who: '🎓 Học trò', bday: true, ava: 'ring', deco: '⭐', k: 'CHÚC MỪNG SINH NHẬT', sub: 'Chúc em tuổi mới thật nhiều niềm vui, sức khỏe và thành công!', emblem: 'cake', song: 'bday', style: 'bday', rays: false,
     th: { bg1: '#5b2aa0', bg2: '#110826', ray: 'rgba(255,170,230,.2)', c1: '#fff', c2: '#ffd1f0', glow: 'rgba(255,120,200,.55)' },
     pal: ['#ff4d6d', '#ffb703', '#4cc9f0', '#80ed99', '#b388ff', '#ff8fab', '#ffd166', '#06d6a0', '#f72585', '#48cae4'], emo: ['🎈', '🎁', '🎉', '🍰', '🧁', '⭐', '💝'],
     shapes: ['burst', 'burst', 'ring', 'heart', 'palm', 'double', 'heart'] },
+  bd_wife: { ic: '💖', label: 'Sinh nhật vợ', who: '💖 Vợ yêu', bday: true, grp: 'bday', ava: 'heart', deco: '💖', k: 'CHÚC MỪNG SINH NHẬT VỢ YÊU',
+    sub: 'Cảm ơn em luôn ở bên anh. Chúc em tuổi mới thật xinh đẹp, hạnh phúc và mãi là nụ cười của gia đình mình!',
+    intro: 'Hôm nay là ngày đặc biệt của người anh yêu nhất…', names: 'Vợ yêu', emblem: 'cake', song: 'bday', style: 'bday', rays: false,
+    th: { bg1: '#a3164d', bg2: '#1d0410', ray: 'rgba(255,150,190,.24)', c1: '#fff', c2: '#ffc2d6', glow: 'rgba(255,80,140,.6)' },
+    pal: ['#ff4d8d', '#ff8fab', '#ffd1dc', '#ff2e63', '#ffffff', '#ffb3c6', '#ffd166'], emo: ['💖', '🌹', '💐', '💍', '💝', '✨'],
+    shapes: ['heart', 'heart', 'burst', 'ring', 'heart', 'double'] },
+  bd_parent: { ic: '🌸', label: 'Sinh nhật cha mẹ', who: '🌸 Cha mẹ', bday: true, grp: 'bday', ava: 'gold', deco: '🌸', k: 'KÍNH CHÚC SINH NHẬT',
+    sub: 'Con kính chúc tuổi mới thật nhiều sức khỏe, bình an, luôn vui vầy bên con cháu. Cảm ơn vì tất cả yêu thương!',
+    intro: 'Hôm nay là sinh nhật của người con kính yêu nhất…', names: 'Mẹ yêu', emblem: 'cake', song: 'bday', style: 'bday', rays: true,
+    th: { bg1: '#8e1b14', bg2: '#1a0503', ray: 'rgba(255,210,120,.26)', c1: '#fff6dc', c2: '#ffd36b', glow: 'rgba(255,190,80,.6)' },
+    pal: GOLD.concat(['#ff4d4d', '#ff9f80']), emo: ['🌸', '🏮', '🍑', '💐', '🎂', '✨'], shapes: ['willow', 'burst', 'palm', 'ring', 'double'] },
+  bd_friend: { ic: '🥳', label: 'Sinh nhật bạn bè', who: '🥳 Bạn bè', bday: true, grp: 'bday', ava: 'polaroid', deco: '✨', k: 'HAPPY BIRTHDAY BẠN THÂN',
+    sub: 'Chúc bạn tuổi mới cháy hết mình, đi thật nhiều nơi, cười thật nhiều và luôn có tụi mình bên cạnh!',
+    intro: 'Đố cả nhóm biết hôm nay sinh nhật ai…', names: 'Minh Anh', emblem: 'cake', song: 'bday', style: 'bday', rays: false,
+    th: { bg1: '#3d2ad1', bg2: '#09031f', ray: 'rgba(120,240,255,.24)', c1: '#ffffff', c2: '#7cf0ff', glow: 'rgba(80,220,255,.6)' },
+    pal: ['#7cf0ff', '#b388ff', '#ff5ec4', '#ffd166', '#80ed99', '#ff7b54'], emo: ['🥳', '🎉', '🍕', '🎮', '🎈', '😎', '🎸'],
+    shapes: ['burst', 'ring', 'palm', 'double', 'star', 'burst'] },
+  bd_colleague: { ic: '💼', label: 'Sinh nhật đồng nghiệp', who: '💼 Đồng nghiệp', bday: true, grp: 'bday', ava: 'frame', deco: '', k: 'CHÚC MỪNG SINH NHẬT',
+    sub: 'Chúc tuổi mới nhiều sức khỏe, công tác thuận lợi, gia đình hạnh phúc. Cảm ơn vì luôn đồng hành cùng tập thể!',
+    intro: 'Cả tập thể xin gửi lời chúc mừng sinh nhật tới…', names: 'Cô Nguyễn Thu Hà', emblem: 'cake', song: 'bday', style: 'bday', rays: true,
+    th: { bg1: '#163f63', bg2: '#030b14', ray: 'rgba(232,199,122,.2)', c1: '#f4f8ff', c2: '#e8c77a', glow: 'rgba(232,199,122,.5)' },
+    pal: ['#e8c77a', '#ffffff', '#9cc9ff', '#ffd9a0', '#c0d6ff', '#ffcf5c'], emo: ['💐', '🎂', '🥂', '⭐', '✨'], shapes: ['willow', 'ring', 'burst', 'palm', 'double'] },
+  bd_kid: { ic: '🧸', label: 'Sinh nhật con', who: '🧸 Con yêu', bday: true, grp: 'bday', ava: 'rainbow', deco: '⭐', k: 'SINH NHẬT VUI VẺ CON YÊU',
+    sub: 'Chúc con tuổi mới luôn khỏe mạnh, ngoan ngoãn, học giỏi và có thật nhiều niềm vui. Bố mẹ yêu con!',
+    intro: 'Hôm nay là sinh nhật của bé yêu nhà mình…', names: 'Bé Na', emblem: 'cake', song: 'bday', style: 'bday', rays: false,
+    th: { bg1: '#2a8fd8', bg2: '#0b1f4a', ray: 'rgba(255,240,150,.26)', c1: '#ffffff', c2: '#fff07a', glow: 'rgba(255,230,90,.6)' },
+    pal: ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#c77dff', '#ff9a3c'], emo: ['🧸', '🎈', '🍭', '🦄', '🎁', '🌈'],
+    shapes: ['burst', 'heart', 'ring', 'star', 'palm', 'double'] },
   victory: { ic: '🏆', label: 'Chiến thắng', k: 'VINH DANH CHIẾN THẮNG', sub: 'Quán quân cuộc thi', subPod: 'Chúc mừng các em đã đạt giải!', emblem: 'trophy', song: 'win', style: 'gold', rays: true,
     th: { bg1: '#7d540b', bg2: '#120a00', ray: 'rgba(255,215,110,.26)', c1: '#fff6c8', c2: '#ffcf3f', glow: 'rgba(255,200,60,.6)' },
     pal: GOLD.concat(['#ff4d6d', '#4cc9f0']), emo: ['🏆', '⭐', '👑', '🏅', '✨'], shapes: ['willow', 'burst', 'star', 'ring', 'palm', 'double', 'willow'] },
@@ -518,6 +677,11 @@ const TYPES = {
     pal: GOLD.concat(['#ff4d6d', '#b388ff']), emo: ['🏅', '⭐', '🎖️', '✨'], shapes: ['burst', 'star', 'willow', 'ring', 'double'] }
 };
 
+/* Ảnh người được chúc mừng: thu nhỏ còn 640 điểm ảnh, lưu trong máy (localStorage) */
+const AVA_KEY = 'san-khau-chuc-mung-ava';
+let AVA = []; try { AVA = JSON.parse(localStorage.getItem(AVA_KEY) || '[]').filter(x => typeof x === 'string' && x.startsWith('data:image/')); } catch (e) {}
+const TVAVA = { list: [], inbox: null };
+
 /* Bài hát của thầy (catbox) */
 const SONGS = {
   bday: ['https://files.catbox.moe/g0htu2.mp3', 'https://files.catbox.moe/tv30n5.mp3', 'https://files.catbox.moe/fpt34i.mp3', 'https://files.catbox.moe/f6o9vc.mp3', 'https://files.catbox.moe/f4qmi8.mp3'],
@@ -527,10 +691,11 @@ const SONGS = {
 /* ---------- Lưu thiết lập ---------- */
 const KEY = 'san-khau-chuc-mung-v1';
 const DEF = { type: 'birthday', names: '', sub: '', title: '', age: '', podium: false, intro: 'drum', music: 'builtin', vol: .75, boom: true, clap: true,
+  photo: { on: true, sec: 8, fx: 'kb', dark: 45, tint: 35, shuffle: false },
   density: 'mid', fx: { fw: true, confetti: true, balloon: true, stars: true, emoji: true, rays: true }, interval: 10, mic: false };
 const S = (() => {
   const d = JSON.parse(JSON.stringify(DEF));
-  try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (o) return Object.assign(d, o, { fx: Object.assign(d.fx, o.fx || {}) }); } catch (e) {}
+  try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (o) return Object.assign(d, o, { fx: Object.assign(d.fx, o.fx || {}), photo: Object.assign(d.photo, o.photo || {}) }); } catch (e) {}
   return d;
 })();
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -1045,6 +1210,7 @@ function medalSVG(T) {
 }
 
 /* =================== CHẠY SÂN KHẤU =================== */
+const isBday = t => !!(TYPES[t] && TYPES[t].bday);
 const RUN = { on: false, id: 0, type: 'birthday', T: null, names: [], idx: 0, podium: false, fxOn: false, tick: 0, raf: 0, last: 0, relight: 0 };
 
 function letters(str, base) {
@@ -1079,9 +1245,18 @@ function emblem(T) { return T.emblem === 'cake' ? cakeSVG(String(S.age || '').tr
 
 function renderShow() {
   const T = RUN.T, name = RUN.names[RUN.idx] || '', sub = S.sub.trim() || T.sub;
-  const cake = T.emblem === 'cake';
-  show.className = 'show t-' + T.style;
-  show.innerHTML = `<div class="emblem ${T.emblem}" ${cake ? 'role="button" tabindex="0" aria-label="Thổi nến" data-act="blow" title="Bấm để thổi nến (B)"' : ''}>${emblem(T)}</div>
+  const cake = T.emblem === 'cake', ava = isBday(RUN.type) ? avaFor(RUN.idx) : '';
+  const emb = `<div class="emblem ${T.emblem}" ${cake ? 'role="button" tabindex="0" aria-label="Thổi nến" data-act="blow" title="Bấm để thổi nến (B)"' : ''}>${emblem(T)}</div>`;
+  show.className = 'show t-' + T.style + (ava ? ' has-ava' : '');
+  if (ava) {
+    const deco = T.deco ? `<div class="ava-deco" aria-hidden="true">${[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => `<i style="--a:${a}deg;--d:${(i * .3).toFixed(1)}s">${T.deco}</i>`).join('')}</div>` : '';
+    show.innerHTML = `<div class="kicker">${letters(kickText(), 0)}</div>
+    <div class="ava ${T.ava || 'ring'}">${deco}<div class="ava-ring" aria-hidden="true"></div><div class="ava-ph"><img src="${ava}" alt="Ảnh ${esc(name)}"></div>${emb}</div>
+    <div class="name"><span class="name-in" aria-label="${esc(name)}">${nameHTML(name)}</span></div>
+    <div class="rule"></div><div class="sub">${esc(sub)}</div>`;
+    fitAll(); void show.offsetWidth; show.classList.add('in'); updateHud(); return;
+  }
+  show.innerHTML = `${emb}
     <div class="kicker">${letters(kickText(), 0)}</div>
     <div class="name"><span class="name-in" aria-label="${esc(name)}">${nameHTML(name)}</span></div>
     <div class="rule"></div><div class="sub">${esc(sub)}</div>`;
@@ -1117,7 +1292,7 @@ function intro(cb) {
     };
     tick();
   } else {
-    const txt = RUN.type === 'birthday' ? 'Hôm nay là sinh nhật của…' : RUN.podium ? 'Và những người chiến thắng là…' : 'Và người được vinh danh là…';
+    const txt = isBday(RUN.type) ? (RUN.T.intro || 'Hôm nay là sinh nhật của…') : RUN.podium ? 'Và những người chiến thắng là…' : 'Và người được vinh danh là…';
     box.innerHTML = `<div class="drum"><div class="drum-ic" aria-hidden="true">🥁</div><div class="drum-t">${txt}</div><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div></div>`;
     SFX.drumroll(2.6); setTimeout(done, 2650);
   }
@@ -1209,7 +1384,7 @@ function start() {
   else { $('#titleErr').hidden = true; $('#fTitle').setAttribute('aria-invalid', 'false'); }
   if (bad) { $(bad).focus(); return; }
   save(); testStop();
-  if (LINK.role === 'ctrl' && LINK.list.size) { linkSend({ t: 'start', s: JSON.parse(JSON.stringify(S)) }); toast('📺 Đã chiếu lên TV'); return; }
+  if (LINK.role === 'ctrl' && LINK.list.size) { castStart(); return; }
   runLocal();
 }
 function runLocal() {
@@ -1222,15 +1397,16 @@ function runLocal() {
   D = RM ? DEN.low : DEN[S.density] || DEN.mid;
   P.length = R.length = B.length = 0; Object.keys(TM).forEach(k => TM[k] = 0);
   applyTheme(RUN.T); show.innerHTML = ''; show.className = 'show';
+  photoStart(LINK.role === 'tv' ? (S.photo.on ? TVPH.list : []) : (S.photo.on ? PHOTOS.map(p => p.url) : []));
   stage.classList.add('run'); stage.classList.remove('has-rays', 'has-spots');
   $('#hud').hidden = false; updateHud(); wake();
-  if (S.mic && S.type === 'birthday') micOn();
+  if (S.mic && isBday(S.type)) micOn();
   RUN.last = performance.now(); cancelAnimationFrame(RUN.raf); RUN.raf = requestAnimationFrame(loop);
   intro(reveal);
 }
 function stop() {
   RUN.id++; RUN.on = false; RUN.fxOn = false; cancelAnimationFrame(RUN.raf); clearTimeout(RUN.relight);
-  musicStop(); micOff();
+  musicStop(); micOff(); photoStop();
   P.length = R.length = B.length = 0; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
   show.innerHTML = ''; $('#intro').hidden = true; $('#hud').hidden = true;
   stage.classList.remove('run', 'has-rays', 'has-spots', 'intro-on', 'idle');
@@ -1242,9 +1418,194 @@ function stop() {
 function updateHud() {
   const multi = !RUN.podium && RUN.names.length > 1;
   $('#hudNav').hidden = !multi; $('#hudPos').textContent = (RUN.idx + 1) + '/' + RUN.names.length;
-  $('#hudBlow').hidden = RUN.type !== 'birthday' || RUN.podium;
+  $('#hudBlow').hidden = !isBday(RUN.type) || RUN.podium;
   report();
 }
+
+/* =================== ẢNH NỀN =================== */
+const PHOTOS = [];               /* ảnh của máy này: { id, blob, url, data } */
+const TVPH = { list: [], inbox: null, n: 0 }; /* ảnh nhận từ máy điều khiển khi làm màn hình TV */
+const PH = { urls: [], order: [], pos: -1, layer: 0, timer: 0 };
+const MAX_PHOTOS = 60;
+
+/* Lưu ảnh bằng IndexedDB (localStorage quá nhỏ cho ảnh) */
+const DB = { p: null };
+function dbOpen() {
+  return DB.p || (DB.p = new Promise((res, rej) => {
+    if (!window.indexedDB) { rej(new Error('no-idb')); return; }
+    const r = indexedDB.open('san-khau-chuc-mung', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('photos', { keyPath: 'id' });
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+}
+function dbTx(mode, fn) {
+  return dbOpen().then(db => new Promise((res, rej) => {
+    const tx = db.transaction('photos', mode), st = tx.objectStore('photos'), out = fn(st);
+    tx.oncomplete = () => res(out && 'result' in out ? out.result : undefined); tx.onerror = () => rej(tx.error);
+  }));
+}
+const dbAll = () => dbTx('readonly', st => st.getAll());
+const dbPut = o => dbTx('readwrite', st => st.put(o));
+const dbDel = id => dbTx('readwrite', st => st.delete(id));
+const dbClear = () => dbTx('readwrite', st => st.clear());
+
+async function loadPhotos() {
+  try {
+    const rows = (await dbAll()) || [];
+    rows.sort((a, b) => a.t - b.t).forEach(r => PHOTOS.push({ id: r.id, blob: r.blob, t: r.t, url: URL.createObjectURL(r.blob) }));
+  } catch (e) { DB.off = true; }
+  renderThumbs();
+}
+/* Thu nhỏ ảnh về cạnh dài 1920px, JPEG, để nhẹ máy và gửi lên TV nhanh */
+function readImage(file) {
+  return new Promise((res, rej) => {
+    const u = URL.createObjectURL(file), img = new Image();
+    img.onload = () => { URL.revokeObjectURL(u); res(img); }; img.onerror = () => { URL.revokeObjectURL(u); rej(new Error('decode')); }; img.src = u;
+  });
+}
+async function shrink(file) {
+  const img = await readImage(file), max = 1920, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const w = Math.round(img.naturalWidth * k), h = Math.round(img.naturalHeight * k);
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const x = c.getContext('2d'); x.fillStyle = '#000'; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
+  return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('blob')), 'image/jpeg', .86));
+}
+async function addFiles(files) {
+  files = [...files].filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|gif|bmp|avif)$/i.test(f.name));
+  if (!files.length) { toast('Không có tệp ảnh nào trong số tệp đã chọn'); return; }
+  const room = MAX_PHOTOS - PHOTOS.length;
+  if (room <= 0) { toast('Đã đủ ' + MAX_PHOTOS + ' ảnh. Xóa bớt ảnh cũ để thêm ảnh mới.', 3200); return; }
+  if (files.length > room) { toast('Chỉ thêm được ' + room + ' ảnh nữa (tối đa ' + MAX_PHOTOS + ' ảnh).', 3200); files = files.slice(0, room); }
+  const drop = $('#drop'), title = $('#dropTitle'), bad = [];
+  drop.classList.add('busy');
+  for (let i = 0; i < files.length; i++) {
+    title.textContent = 'Đang thêm ảnh ' + (i + 1) + '/' + files.length + '…';
+    try {
+      const blob = await shrink(files[i]), id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7), t = Date.now() + i;
+      const p = { id, blob, t, url: URL.createObjectURL(blob) }; PHOTOS.push(p);
+      if (!DB.off) try { await dbPut({ id, blob, t }); } catch (e) { DB.off = true; }
+    } catch (e) { bad.push(files[i].name); }
+  }
+  drop.classList.remove('busy'); title.textContent = 'Kéo thả ảnh vào đây hoặc bấm để chọn';
+  renderThumbs();
+  if (bad.length) toast('Không đọc được ' + bad.length + ' ảnh (ví dụ ' + bad[0] + '). Ảnh HEIC của iPhone cần đổi sang JPG.', 4500);
+  else toast('Đã thêm ' + files.length + ' ảnh' + (DB.off ? ' (chỉ giữ đến khi tải lại trang)' : ''));
+}
+function renderThumbs() {
+  $('#thumbs').innerHTML = PHOTOS.map((p, i) => `<div class="th"><img src="${p.url}" alt="Ảnh nền ${i + 1}" loading="lazy"><span class="n">${i + 1}</span><button type="button" data-del="${p.id}" aria-label="Xóa ảnh ${i + 1}">✕</button></div>`).join('');
+  const n = PHOTOS.length;
+  $('#photoBar').hidden = !n;
+  if (n) {
+    const mb = PHOTOS.reduce((a, p) => a + p.blob.size, 0) / 1048576;
+    $('#photoCount').textContent = n + ' ảnh · ' + (mb < 1 ? Math.round(mb * 1024) + ' KB' : mb.toFixed(1) + ' MB') + (DB.off ? ' · chưa lưu được trên máy này' : '');
+  }
+}
+async function delPhoto(id) {
+  const i = PHOTOS.findIndex(p => p.id === id); if (i < 0) return;
+  URL.revokeObjectURL(PHOTOS[i].url); PHOTOS.splice(i, 1); renderThumbs();
+  if (!DB.off) try { await dbDel(id); } catch (e) {}
+}
+async function clearPhotos() {
+  if (!PHOTOS.length || !confirm('Xóa tất cả ' + PHOTOS.length + ' ảnh nền? Không hoàn tác được.')) return;
+  PHOTOS.forEach(p => URL.revokeObjectURL(p.url)); PHOTOS.length = 0; renderThumbs();
+  if (!DB.off) try { await dbClear(); } catch (e) {}
+  toast('Đã xóa tất cả ảnh nền');
+}
+
+/* Trình chiếu ảnh nền: hai lớp thay phiên, chuyển mềm */
+function photoStart(urls) {
+  photoStop();
+  PH.urls = urls.slice(); if (!PH.urls.length) return;
+  stage.style.setProperty('--dark', (S.photo.dark / 100).toFixed(2));
+  stage.style.setProperty('--tint', (S.photo.tint / 100).toFixed(2));
+  stage.style.setProperty('--dur', (S.photo.sec + 2) + 's');
+  PH.order = PH.urls.map((_, i) => i);
+  if (S.photo.shuffle) shuffle(PH.order);
+  PH.pos = -1; stage.classList.add('has-photos');
+  photoNext(false);
+  $('#hudPhoto').hidden = PH.urls.length < 2;
+}
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function photoNext(manual) {
+  if (!PH.urls.length) return;
+  clearTimeout(PH.timer);
+  PH.pos++;
+  if (PH.pos >= PH.order.length) {
+    PH.pos = 0;
+    if (S.photo.shuffle && PH.order.length > 2) { const last = PH.order[PH.order.length - 1]; shuffle(PH.order); if (PH.order[0] === last) PH.order.push(PH.order.shift()); }
+  }
+  const url = PH.urls[PH.order[PH.pos]], img = new Image();
+  const swap = () => {
+    if (!stage.classList.contains('has-photos')) return;
+    const L = $$('.bgi', $('#photos')), nx = L[PH.layer ^ 1], cur = L[PH.layer];
+    nx.classList.remove('on', 'kb', 'slide'); nx.style.backgroundImage = 'url("' + url + '")';
+    nx.style.setProperty('--ox', rand(-3, 3).toFixed(1) + '%'); nx.style.setProperty('--oy', rand(-2, 2).toFixed(1) + '%');
+    void nx.offsetWidth;
+    if (S.photo.fx === 'kb' && !RM) nx.classList.add('kb'); else if (S.photo.fx === 'slide' && !RM) nx.classList.add('slide');
+    nx.classList.add('on'); cur.classList.remove('on'); PH.layer ^= 1;
+  };
+  img.onload = img.onerror = swap; img.src = url;
+  if (PH.urls.length > 1) PH.timer = setTimeout(() => photoNext(false), S.photo.sec * 1000);
+  if (manual && PH.urls.length < 2) toast('Chỉ có 1 ảnh nền', 1200);
+}
+function photoStop() {
+  clearTimeout(PH.timer); PH.urls = []; stage.classList.remove('has-photos');
+  $$('.bgi', $('#photos')).forEach(b => { b.classList.remove('on', 'kb', 'slide'); b.style.backgroundImage = ''; });
+  $('#hudPhoto').hidden = true;
+}
+
+/* Đọc ảnh thành chuỗi data: để gửi lên TV */
+function photoData(p) {
+  return p.data ? Promise.resolve(p.data) : new Promise((res, rej) => {
+    const fr = new FileReader(); fr.onload = () => res(p.data = fr.result); fr.onerror = () => rej(fr.error); fr.readAsDataURL(p.blob);
+  });
+}
+async function castStart() {
+  const snap = JSON.parse(JSON.stringify(S));
+  if (S.photo.on && PHOTOS.length) {
+    const sig = PHOTOS.map(p => p.id).join(',');
+    if (LINK.sig !== sig) {
+      linkSend({ t: 'ph-begin', n: PHOTOS.length });
+      for (let i = 0; i < PHOTOS.length; i++) {
+        toast('📺 Đang gửi ảnh nền lên TV ' + (i + 1) + '/' + PHOTOS.length + '…', 4000);
+        try { linkSend({ t: 'ph', i, d: await photoData(PHOTOS[i]) }); } catch (e) {}
+        await new Promise(r => setTimeout(r, 30));
+      }
+      linkSend({ t: 'ph-end' }); LINK.sig = sig;
+    }
+  }
+  if (isBday(S.type)) {
+    const sig = AVA.map(d => d.length + d.slice(-24)).join('|');
+    if (LINK.avaSig !== sig) {
+      linkSend({ t: 'ava-begin', n: AVA.length });
+      for (let i = 0; i < AVA.length; i++) { linkSend({ t: 'ava', i, d: AVA[i] }); await new Promise(r => setTimeout(r, 30)); }
+      linkSend({ t: 'ava-end' }); LINK.avaSig = sig;
+    }
+  }
+  linkSend({ t: 'start', s: snap }); toast('📺 Đã chiếu lên TV');
+}
+
+const drop = $('#drop'), fileIn = $('#fPhotos');
+drop.addEventListener('click', () => fileIn.click());
+drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); fileIn.click(); } });
+fileIn.addEventListener('change', () => { if (fileIn.files.length) addFiles(fileIn.files); fileIn.value = ''; });
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+document.addEventListener('dragover', e => { if (!RUN.on) e.preventDefault(); });
+document.addEventListener('drop', e => { if (!RUN.on && !e.target.closest('#drop')) { e.preventDefault(); if (e.dataTransfer && e.dataTransfer.files.length) addFiles(e.dataTransfer.files); } });
+$('#thumbs').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (b) delPhoto(b.dataset.del); });
+$('#btnClearPhotos').addEventListener('click', clearPhotos);
+$('#avaPick').addEventListener('click', e => {
+  const d = e.target.closest('[data-ava-del]'); if (d) { AVA.splice(+d.dataset.avaDel, 1); avaSave(); renderAva(); return; }
+  if (e.target.closest('#avaAdd')) $('#fAva').click();
+});
+$('#fAva').addEventListener('change', e => { const fs = e.target.files; if (fs && fs.length) avaAdd(fs); e.target.value = ''; });
+$('#fNames').addEventListener('input', () => { if (!$('#rowAva').hidden) renderAva(); });
+$('#fors').innerHTML = Object.entries(TYPES).filter(([k, t]) => t.bday).map(([k, t]) => `<label class="fchip"><input type="radio" name="bdfor" value="${k}"><span>${t.who}</span></label>`).join('');
+$('#fPhotoDark').addEventListener('input', e => { $('#darkOut').textContent = e.target.value + '%'; });
+$('#fPhotoTint').addEventListener('input', e => { $('#tintOut').textContent = e.target.value + '%'; });
+loadPhotos();
 
 /* =================== CHIẾU LÊN TV =================== */
 /* Hai đường truyền: Presentation API (Cast thẳng) và PeerJS (ghép mã). Cả hai cùng một bộ lệnh. */
@@ -1267,7 +1628,7 @@ function setStatus(id, msg, kind) { const el = $(id); if (!el) return; el.textCo
 function linkSend(o) { LINK.list.forEach(l => { try { l.send(o); } catch (e) {} }); }
 
 function linkUp(l, role, via) {
-  LINK.list.add(l); LINK.role = role; LINK.via = via;
+  LINK.list.add(l); LINK.role = role; LINK.via = via; LINK.sig = '';
   if (role === 'ctrl') {
     $('#remote').hidden = false; $('#btnStart').textContent = '📺 Chiếu lên TV';
     $('#remoteTitle').textContent = via === 'cast' ? 'Đang cast lên TV' : 'Đang điều khiển TV (mã ' + ($('#fCode').value.replace(/\D/g, '')) + ')';
@@ -1286,9 +1647,15 @@ function onMsg(m, l) {
   if (!m || typeof m !== 'object') return;
   if (LINK.role === 'tv') {
     if (m.t === 'hello') report();
+    else if (m.t === 'ph-begin') { TVPH.inbox = []; TVPH.n = m.n | 0; }
+    else if (m.t === 'ph' && TVPH.inbox && typeof m.d === 'string' && m.d.startsWith('data:image/')) TVPH.inbox.push(m.d);
+    else if (m.t === 'ph-end') { if (TVPH.inbox) { TVPH.list = TVPH.inbox; TVPH.inbox = null; } }
+    else if (m.t === 'ava-begin') TVAVA.inbox = [];
+    else if (m.t === 'ava' && TVAVA.inbox && typeof m.d === 'string' && m.d.startsWith('data:image/')) TVAVA.inbox[m.i | 0] = m.d;
+    else if (m.t === 'ava-end') { if (TVAVA.inbox) { TVAVA.list = TVAVA.inbox; TVAVA.inbox = null; } }
     else if (m.t === 'start' && m.s) { stopIfRunning(); Object.assign(S, m.s, { fx: Object.assign({}, DEF.fx, m.s.fx || {}) }); setVol(S.vol); runLocal(); }
     else if (m.t === 'stop') { if (RUN.on) stop(); }
-    else if (m.t === 'act' && RUN.on && ['prev', 'next', 'blow', 'fw', 'conf', 'replay'].includes(m.a)) act(m.a);
+    else if (m.t === 'act' && RUN.on && ['prev', 'next', 'blow', 'fw', 'conf', 'replay', 'photo'].includes(m.a)) act(m.a);
     else if (m.t === 'mute') { if (A.muted !== !!m.m) toggleMute(); report(); }
     else if (m.t === 'vol') setVol(clamp(+m.v || 0, 0, 1));
   } else if (LINK.role === 'ctrl' && m.t === 'state') {
@@ -1301,7 +1668,7 @@ function onMsg(m, l) {
 }
 function stopIfRunning() {
   if (!RUN.on) return;
-  RUN.id++; RUN.on = false; RUN.fxOn = false; cancelAnimationFrame(RUN.raf); clearTimeout(RUN.relight); musicStop(); micOff();
+  RUN.id++; RUN.on = false; RUN.fxOn = false; cancelAnimationFrame(RUN.raf); clearTimeout(RUN.relight); musicStop(); micOff(); photoStop();
   $('#intro').hidden = true; stage.classList.remove('intro-on');
 }
 function report() {
@@ -1449,6 +1816,7 @@ function act(a) {
     case 'fw': for (let i = 0; i < 3; i++) setTimeout(() => RUN.on && launch(), i * 220); break;
     case 'conf': cannon(-1); cannon(1); break;
     case 'replay': replay(); break;
+    case 'photo': photoNext(true); break;
     case 'mute': toggleMute(); break;
     case 'fs': fullscreen(); break;
   }
@@ -1480,6 +1848,7 @@ document.addEventListener('keydown', e => {
   else if (/^[pP]$/.test(k)) act('fw');
   else if (/^[cC]$/.test(k)) act('conf');
   else if (/^[rR]$/.test(k)) replay();
+  else if (/^[nN]$/.test(k)) photoNext(true);
   else if (/^[mM]$/.test(k)) toggleMute();
   else if (/^[fF]$/.test(k)) fullscreen();
   else if (k === '+' || k === '=' || k === '-') { setVol(clamp(Math.round((S.vol + (k === '-' ? -.1 : .1)) * 10) / 10, 0, 1)); save(); $('#fVol').value = S.vol * 100; $('#volOut').textContent = Math.round(S.vol * 100) + '%'; toast('Âm lượng ' + Math.round(S.vol * 100) + '%', 1200); }
@@ -1487,34 +1856,63 @@ document.addEventListener('keydown', e => {
 
 /* =================== BẢNG THIẾT LẬP =================== */
 const form = $('#form');
-$('#types').innerHTML = Object.entries(TYPES).map(([k, t]) => `<label class="chip"><input type="radio" name="type" value="${k}"><span class="ic" aria-hidden="true">${t.ic}</span><span>${t.label}</span></label>`).join('');
+$('#types').innerHTML = Object.entries(TYPES).filter(([k, t]) => t.grp !== 'bday').map(([k, t]) => `<label class="chip"><input type="radio" name="type" value="${k}"><span class="ic" aria-hidden="true">${t.ic}</span><span>${t.label}</span></label>`).join('');
 function fillForm() {
-  form.type.value = S.type; form.intro.value = S.intro; form.density.value = S.density;
+  form.type.value = isBday(S.type) ? 'birthday' : S.type; form.bdfor.value = isBday(S.type) ? S.type : 'birthday'; form.intro.value = S.intro; form.density.value = S.density;
   $('#fNames').value = S.names; $('#fSub').value = S.sub; $('#fTitle').value = S.title; $('#fAge').value = S.age;
   $('#fInterval').value = S.interval; $('#fPodium').checked = S.podium; $('#fMusic').value = S.music;
   $('#fVol').value = Math.round(S.vol * 100); $('#volOut').textContent = Math.round(S.vol * 100) + '%';
   $('#fBoom').checked = S.boom; $('#fClap').checked = S.clap; $('#fMic').checked = S.mic;
+  $('#fPhotoOn').checked = S.photo.on; $('#fPhotoSec').value = S.photo.sec; $('#fPhotoFx').value = S.photo.fx;
+  $('#fPhotoDark').value = S.photo.dark; $('#darkOut').textContent = S.photo.dark + '%';
+  $('#fPhotoTint').value = S.photo.tint; $('#tintOut').textContent = S.photo.tint + '%'; $('#fPhotoShuffle').checked = S.photo.shuffle;
+  $('#photoOpts').setAttribute('aria-disabled', String(!S.photo.on));
   $$('[data-fx]').forEach(c => c.checked = !!S.fx[c.dataset.fx]);
   syncType();
 }
+function avaFor(i) { const L = LINK.role === 'tv' ? TVAVA.list : AVA; return L[i] || (RUN.names.length === 1 ? L[0] : '') || ''; }
+function avaSave() { try { localStorage.setItem(AVA_KEY, JSON.stringify(AVA)); return true; } catch (e) { toast('Bộ nhớ trình duyệt đầy, chưa lưu được thêm ảnh'); return false; } }
+function renderAva() {
+  const box = $('#avaPick'); if (!box) return;
+  const names = $('#fNames').value.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  box.innerHTML = AVA.map((d, i) => `<div class="ava-th"><img src="${d}" alt=""><span class="n">${i + 1}</span><small>${esc(names[i] || (names.length === 1 && i === 0 ? names[0] : '—'))}</small><button type="button" data-ava-del="${i}" aria-label="Xóa ảnh ${i + 1}">✕</button></div>`).join('')
+    + (AVA.length < 12 ? '<button type="button" class="ava-add" id="avaAdd" aria-label="Thêm ảnh người được chúc mừng">＋<span>Thêm ảnh</span></button>' : '');
+}
+async function avaShrink(file) {
+  const bmp = await createImageBitmap(file), k = Math.min(1, 640 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height); if (bmp.close) bmp.close();
+  return c.toDataURL('image/jpeg', .86);
+}
+async function avaAdd(files) {
+  const list = [...files].filter(f => /^image\//.test(f.type)).slice(0, 12 - AVA.length); if (!list.length) return;
+  for (const f of list) { try { AVA.push(await avaShrink(f)); } catch (e) { toast('Không đọc được ảnh ' + f.name); } }
+  if (!avaSave()) AVA.length = Math.max(0, AVA.length - list.length); renderAva();
+  toast('Đã thêm ' + list.length + ' ảnh người được chúc mừng', 1800);
+}
 function readForm() {
-  S.type = form.type.value || 'birthday'; S.intro = form.intro.value || 'drum'; S.density = form.density.value || 'mid';
+  S.type = curType(); S.intro = form.intro.value || 'drum'; S.density = form.density.value || 'mid';
   S.names = $('#fNames').value; S.sub = $('#fSub').value; S.title = $('#fTitle').value; S.age = $('#fAge').value;
   S.interval = clamp(parseInt($('#fInterval').value, 10) || 10, 4, 120); S.podium = $('#fPodium').checked; S.music = $('#fMusic').value;
   S.vol = (+$('#fVol').value) / 100; S.boom = $('#fBoom').checked; S.clap = $('#fClap').checked; S.mic = $('#fMic').checked;
+  S.photo = { on: $('#fPhotoOn').checked, sec: clamp(parseInt($('#fPhotoSec').value, 10) || 8, 3, 120), fx: $('#fPhotoFx').value,
+    dark: +$('#fPhotoDark').value, tint: +$('#fPhotoTint').value, shuffle: $('#fPhotoShuffle').checked };
+  $('#photoOpts').setAttribute('aria-disabled', String(!S.photo.on));
   $$('[data-fx]').forEach(c => S.fx[c.dataset.fx] = c.checked);
 }
+function curType() { const t = form.type.value || 'birthday'; return t === 'birthday' ? ((form.bdfor && form.bdfor.value) || 'birthday') : t; }
 function syncType() {
-  const t = form.type.value || 'birthday', T = TYPES[t], bday = t === 'birthday';
+  const t = curType(), T = TYPES[t], bday = isBday(t);
+  $('#rowFor').hidden = !bday; $('#rowAva').hidden = !bday; renderAva();
   $('#rowTitle').hidden = t !== 'custom'; $('#rowAge').hidden = !bday; $('#rowMic').hidden = !bday; $('#micHint').hidden = !bday;
   $('#rowPodium').hidden = !(t === 'victory' || t === 'team');
   $('#subLbl').textContent = bday ? 'Lời chúc' : 'Dòng phụ';
   $('#fSub').placeholder = T.sub;
-  $('#fNames').placeholder = t === 'team' ? 'Đội Pi\nĐội Euler' : 'Nguyễn Minh Anh\nTrần Bảo Ngọc';
+  $('#fNames').placeholder = t === 'team' ? 'Đội Pi\nĐội Euler' : T.names || 'Nguyễn Minh Anh\nTrần Bảo Ngọc';
   applyTheme(T);
 }
 form.addEventListener('change', e => {
-  if (e.target.name === 'type') syncType();
+  if (e.target.name === 'type' || e.target.name === 'bdfor') syncType();
   readForm(); save();
   if (e.target.id === 'fNames' || e.target.id === 'fTitle') { $('#namesErr').hidden = true; $('#titleErr').hidden = true; }
 });
